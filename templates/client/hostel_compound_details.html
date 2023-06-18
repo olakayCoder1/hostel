@@ -103,6 +103,8 @@
         <!--begin::Items-->
     </div>
 </div>
+
+{% if open_rooms %}
 <div class="subheader py-2 py-lg-6 subheader-transparent" id="kt_subheader">
     <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
         <!--begin::Info-->
@@ -147,6 +149,9 @@
     </tbody>
     </table>
 </div>
+{% else %}
+{% include 'empty.html' with title='All the rooms in this compounds are currently occupied or not available' description='We regret to inform you that all our the compound in this hostel are currently fully occupied. or not available' explore='oo' %}
+{% endif %}
 {% endblock %}
 
 

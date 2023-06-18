@@ -1686,8 +1686,8 @@
                                     </a>
                                     <div class="menu-submenu menu-submenu-classic menu-submenu-right">
                                         <ul class="menu-subnav">
-                                            {% if hostels %}
-                                            {% for hostel in hostels %}
+                                            {% if nav_hostels %}
+                                            {% for hostel in nav_hostels %}
                                             <li class="menu-item" aria-haspopup="true">
                                                 <a href="{% url 'hostels:hostel_details' hostel.uuid %}" class="menu-link">
                                                     <i class="menu-bullet menu-bullet-dot">

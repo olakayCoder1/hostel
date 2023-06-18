@@ -11,8 +11,11 @@
 {% endblock %}
 
 {% block page_content %}
+
+{% if hostels %}
 <div class="flex-row ml-lg-8">
     <!--begin::Row-->
+
     <div class="row">
         <!--begin::Col-->
         {% for hostel in hostels %}
@@ -59,6 +62,9 @@
     </div>
     <!--end::Row-->
 </div>
+{% else%}
+{% include 'empty.html' with title='All hostels are currently occupied' description='We regret to inform you that all our hostels are currently fully occupied. We understand that this may cause inconvenience, especially if you were looking to make a booking.'  %}
+{% endif %}
 {% endblock %}
 
 

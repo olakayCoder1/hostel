@@ -125,134 +125,97 @@
         <!--end::Toolbar-->
     </div>
 </div>
-{% comment %} <div class="d-flex flex-row"> {% endcomment %}
-    
-    <!--end::Aside-->
-    <!--begin::Content-->
-    <div class="flex-row ml-lg-8 ">
-        <!--begin::Row-->
-        <div class="row">
-            <!--begin::Col-->
-            {% for compound in compounds %}
-            <div class="col-xl-3">
-                <!--begin::Card-->
-                <div class="card card-custom gutter-b">
-                    <!--begin::Body-->
-                    <div class="card-body">
-                        <!--begin::Wrapper-->
-                        <div class="d-flex justify-content-between flex-column h-100">
-                            <!--begin::Container-->
-                            <div class="h-100">
-                                <!--begin::Header-->
-                                <div class="d-flex flex-column flex-center">
-                                    <!--begin::Image-->
-                                    <div class="bgi-no-repeat bgi-size-cover rounded min-h-180px w-100" style="background-image: url({% static 'assets/media/stock-600x400/img-70.jpg' %})"></div>
+{% if compounds %}
+<div class="flex-row ml-lg-8 ">
+    <!--begin::Row-->
+    <div class="row">
+        <!--begin::Col-->
+        {% for compound in compounds %}
+        <div class="col-xl-3">
+            <!--begin::Card-->
+            <div class="card card-custom gutter-b">
+                <!--begin::Body-->
+                <div class="card-body">
+                    <!--begin::Wrapper-->
+                    <div class="d-flex justify-content-between flex-column h-100">
+                        <!--begin::Container-->
+                        <div class="h-100">
+                            <!--begin::Header-->
+                            <div class="d-flex flex-column flex-center">
+                                <!--begin::Image-->
+                                <div class="bgi-no-repeat bgi-size-cover rounded min-h-180px w-100" style="background-image: url({% static 'assets/media/stock-600x400/img-70.jpg' %})"></div>
 
-                                    <!--end::Image-->
-                                    <!--begin::Title--> 
-                                    <a href="{% url 'hostels:compound_details' hostel.uuid compound.uuid %}" class="card-title font-weight-bolder text-dark-75 text-hover-primary font-size-h4 m-0 pt-7 pb-1">{{compound.name}}</a>
-                                    <!--end::Title-->
-                                </div>
+                                <!--end::Image-->
+                                <!--begin::Title--> 
+                                <a href="{% url 'hostels:compound_details' hostel.uuid compound.uuid %}" class="card-title font-weight-bolder text-dark-75 text-hover-primary font-size-h4 m-0 pt-7 pb-1">{{compound.name}}</a>
+                                <!--end::Title-->
                             </div>
-                            <!--eng::Container-->
-                            <!--begin::Footer-->
-                            <div class="d-flex flex-center"  data-toggle="tooltip" title="" data-placement="right" data-original-title="View compound">
-                                <a href="{% url 'hostels:compound_details' hostel.uuid compound.uuid %}" class="btn btn-primary font-weight-bolder font-size-sm py-3 px-14" >Explore</a>
-                            </div>
-                            <!--end::Footer-->
                         </div>
-                        <!--end::Wrapper-->
+                        <!--eng::Container-->
+                        <!--begin::Footer-->
+                        <div class="d-flex flex-center"  data-toggle="tooltip" title="" data-placement="right" data-original-title="View compound">
+                            <a href="{% url 'hostels:compound_details' hostel.uuid compound.uuid %}" class="btn btn-primary font-weight-bolder font-size-sm py-3 px-14" >Explore</a>
+                        </div>
+                        <!--end::Footer-->
                     </div>
-                    <!--end::Body-->
+                    <!--end::Wrapper-->
                 </div>
-                <!--end::Card-->
+                <!--end::Body-->
             </div>
-            {% endfor %}
-            <!--end::Col-->
-            
-            <!--end::Col-->
+            <!--end::Card-->
         </div>
-        <!--end::Row-->
-        <!--begin::Pagination-->
-        {% comment %} <div class="card card-custom">
-            <div class="card-body py-7">
-                <!--begin::Pagination-->
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
-                    <div class="d-flex flex-wrap mr-3">
-                        <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1">
-                            <i class="ki ki-bold-double-arrow-back icon-xs"></i>
-                        </a>
-                        <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1">
-                            <i class="ki ki-bold-arrow-back icon-xs"></i>
-                        </a>
-                        <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">...</a>
-                        <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">23</a>
-                        <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary active mr-2 my-1">24</a>
-                        <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">25</a>
-                        <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">26</a>
-                        <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">27</a>
-                        <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">28</a>
-                        <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">...</a>
-                        <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1">
-                            <i class="ki ki-bold-arrow-next icon-xs"></i>
-                        </a>
-                        <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1">
-                            <i class="ki ki-bold-double-arrow-next icon-xs"></i>
-                        </a>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <select class="form-control form-control-sm text-primary font-weight-bold mr-4 border-0 bg-light-primary" style="width: 75px;">
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                        <span class="text-muted">Displaying 10 of 230 records</span>
-                    </div>
-                </div>
-                <!--end:: Pagination-->
-            </div>
-        </div> {% endcomment %}
-        <!--end::Pagination-->
+        {% endfor %}
+        <!--end::Col-->
+        
+        <!--end::Col-->
     </div>
-    <!--end::Content-->
-{% comment %} </div> {% endcomment %}
+    <!--end::Row-->
+    <!--begin::Pagination-->
+    {% comment %} <div class="card card-custom">
+        <div class="card-body py-7">
+            <!--begin::Pagination-->
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div class="d-flex flex-wrap mr-3">
+                    <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1">
+                        <i class="ki ki-bold-double-arrow-back icon-xs"></i>
+                    </a>
+                    <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1">
+                        <i class="ki ki-bold-arrow-back icon-xs"></i>
+                    </a>
+                    <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">...</a>
+                    <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">23</a>
+                    <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary active mr-2 my-1">24</a>
+                    <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">25</a>
+                    <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">26</a>
+                    <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">27</a>
+                    <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">28</a>
+                    <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">...</a>
+                    <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1">
+                        <i class="ki ki-bold-arrow-next icon-xs"></i>
+                    </a>
+                    <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1">
+                        <i class="ki ki-bold-double-arrow-next icon-xs"></i>
+                    </a>
+                </div>
+                <div class="d-flex align-items-center">
+                    <select class="form-control form-control-sm text-primary font-weight-bold mr-4 border-0 bg-light-primary" style="width: 75px;">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span class="text-muted">Displaying 10 of 230 records</span>
+                </div>
+            </div>
+            <!--end:: Pagination-->
+        </div>
+    </div> {% endcomment %}
+    <!--end::Pagination-->
+</div>
+{% else %}
+{% include 'empty.html' with title='All hostel compounds are currently occupied or not avaailable' description='We regret to inform you that all our the compound in this hostel are currently fully occupied. or not available' explore='oo' %}
+{% endif %}
 {% endblock %}
 
 
-
- <div class="flex-md-row-auto w-md-275px w-xl-325px">
-        <!--begin::Nav Panel Widget 3-->
-    <div class="card card-custom gutter-b">
-        <!--begin::Body-->
-        <div class="card-body">
-            <!--begin::Wrapper-->
-            <div class="d-flex justify-content-between flex-column h-100">
-                <!--begin::Container-->
-                <div class="h-100">
-                    <!--begin::Header-->
-                    <div class="d-flex flex-column flex-center">
-                        <!--begin::Image-->
-                        <div class="bgi-no-repeat bgi-size-cover rounded min-h-180px w-100" style="background-image: url({% static 'assets/media/stock-600x400/img-70.jpg' %})"></div>
-
-                        <!--end::Image-->
-                        <!--begin::Title--> 
-                        <a href="./#" class="card-title font-weight-bolder text-dark-75 text-hover-primary font-size-h4 m-0 pt-7 pb-1">Hopkins High Hostel</a>
-                        <!--end::Title-->
-                    </div>
-                </div>
-                <!--eng::Container-->
-                <!--begin::Footer-->
-                <div class="d-flex flex-center" id="kt_sticky_toolbar_chat_toggler_2" data-toggle="tooltip" title="" data-placement="right" data-original-title="Book Hostel">
-                    <button class="btn btn-primary font-weight-bolder font-size-sm py-3 px-14" data-toggle="modal" data-target="#kt_chat_modal">Book Hostel</button>
-                </div>
-                <!--end::Footer-->
-            </div>
-            <!--end::Wrapper-->
-        </div>
-        <!--end::Body-->
-    </div>
-    <!--end::Nav Panel Widget 3-->
-    <!--begin::List Widget 17-->
-</div> 

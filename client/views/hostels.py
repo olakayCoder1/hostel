@@ -3,26 +3,35 @@ from django.shortcuts import render
 from client.models import ( HostelCategory, Compound, Room , Hostel, Booking, Document )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from account.models import User
+from helpers.main import Injector
 
-
-class HostelsView(LoginRequiredMixin, View):
+class HostelsView(LoginRequiredMixin , View, Injector):
 
     def get(self, request):
         auth_user = User.objects.get(id=request.user.id)
-        context = {}
+        from django.db.models import Count
+ 
+        hostel_categories = HostelCategory.objects.annotate(compound_count=Count('compound'), room_count=Count('room')) 
+
+        for n in hostel_categories:
+            print(n.compound_count, n.room_count, n.name)  
+
+        context = self.get_inject_context()
+        auth_user = User.objects.get(id=self.request.user.id)
         if auth_user.gender == 'male':
-            context['hostels'] = Hostel.objects.filter(hostel_category__name='Male') 
+            context['hostels'] = Hostel.objects.filter(hostel_category__name='Male', is_active=True) 
         else:
-            context['hostels'] = Hostel.objects.filter(hostel_category__name='Female') 
+            context['hostels'] = Hostel.objects.filter(hostel_category__name='Female', is_active=True) 
         return render(request, 'client/hostels.html' , context)  
 
 
-class HostelDetailsView(View):
+
+class HostelDetailsView(LoginRequiredMixin,View , Injector ):
 
     def get(self, request , id):
         hostel = Hostel.objects.get(uuid=id)
-        print(hostel.name) 
-        context = {
+        context = self.get_inject_context() 
+        context.update({
             'hostel' : hostel,
             'hostel_name' : hostel.name,
             'compounds': hostel.get_compounds,
@@ -30,8 +39,7 @@ class HostelDetailsView(View):
             'active_compounds_count': hostel.get_active_compound_count,
             'rooms_count': hostel.get_room_count,
             'open_rooms_count': hostel.get_open_rooms
-            
-        }
+        })
         
         return render(request, 'client/hostel_details.html' ,context)  
 
@@ -39,7 +47,7 @@ class HostelDetailsView(View):
 
 
 
-class CompoundDetailsView(View):
+class CompoundDetailsView(LoginRequiredMixin,View,Injector):
 
     def get(self, request , hostel_id, compound_id ):
         hostel = Hostel.objects.get(uuid=hostel_id)
@@ -57,7 +65,8 @@ class CompoundDetailsView(View):
             'compounds_count': hostel.get_compound_count,
             'active_compounds_count': hostel.get_active_compound_count,
             'rooms_count': hostel.get_room_count,
-            'open_rooms_count': hostel.get_open_rooms
+            'open_rooms_count': hostel.get_open_rooms,
+            'open_rooms': hostel.get_open_rooms
             
         }
         
@@ -68,7 +77,7 @@ class CompoundDetailsView(View):
 
 
 
-class HostelApplicationView(View):
+class HostelApplicationView(LoginRequiredMixin,View,Injector):
 
     def get(self, request):
         return render(request, 'client/hostel_application.html')
@@ -80,7 +89,7 @@ class HostelApplicationView(View):
 
 
 
-class HostelAccreditationView(View):
+class HostelAccreditationView(LoginRequiredMixin,View,Injector):
 
     def get(self, request):
         return render(request, 'client/hostel_accreditation.html')
