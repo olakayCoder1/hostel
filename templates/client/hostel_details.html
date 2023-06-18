@@ -7,20 +7,134 @@
 {% endblock %}
 
 {% block subheader  %}
-    {% include 'in_page_title.html' with page='Available Compounds' %}
+    {% include 'in_page_title.html' with page=hostel_name %}
 {% endblock %}
 
 {% block page_content %}
-<div class="d-flex flex-row">
+
+<div class="card card-custom gutter-b">
+    <div class="card-body">
+        <!--begin::Details-->
+        <div class="d-flex mb-9">
+            <!--begin: Pic-->
+            <div class="flex-shrink-0 mr-7 mt-lg-0 mt-3">
+                <div class="symbol symbol-50 symbol-lg-120">
+                    <img src="{% static 'assets/media/stock-600x400/img-70.jpg' %}" alt="image" />
+                </div>
+                <div class="symbol symbol-50 symbol-lg-120 symbol-primary d-none">
+                    <span class="font-size-h3 symbol-label font-weight-boldest">JM</span>
+                </div>
+            </div>
+            <!--end::Pic-->
+            <!--begin::Info-->
+            <div class="flex-grow-1">
+                <!--begin::Title-->
+                <div class="d-flex justify-content-between flex-wrap mt-1">
+                    <div class="d-flex mr-3">
+                        <a href="#" class="text-dark-75 text-hover-primary font-size-h5 font-weight-bold mr-3">{{ hostel_name }}</a>
+                        <a href="#">
+                            <i class="flaticon2-correct text-success font-size-h5"></i>
+                        </a>
+                    </div>
+                    <div class="my-lg-0 my-3">
+                        <button class="btn btn-sm btn-light-success font-weight-bolder text-uppercase mr-3">Active</button>
+                        <button  class="btn btn-sm btn-info font-weight-bolder text-uppercase">Open</button>
+                    </div>
+                </div>
+                <!--end::Title-->
+                <!--begin::Content-->
+                <div class="d-flex flex-wrap justify-content-between mt-1">
+                    <div class="d-flex flex-column flex-grow-1 pr-8">
+                        <div class="d-flex flex-wrap mb-4">
+                            <a href="#" class="text-dark-50 text-hover-primary font-weight-bold mr-lg-8 mr-5 mb-lg-0 mb-2">
+                            <i class="flaticon2-new-email mr-2 font-size-lg"></i>jason@siastudio.com</a>
+                            <a href="#" class="text-dark-50 text-hover-primary font-weight-bold mr-lg-8 mr-5 mb-lg-0 mb-2">
+                            <i class="flaticon2-calendar-3 mr-2 font-size-lg"></i>PR Manager</a>
+                            <a href="#" class="text-dark-50 text-hover-primary font-weight-bold">
+                            <i class="flaticon2-placeholder mr-2 font-size-lg"></i>Melbourne</a>
+                        </div>
+                        <span class="font-weight-bold text-dark-50">{{hostel.description  }} </span>
+                    </div>
+                    <div class="d-flex align-items-center w-25 flex-fill float-right mt-lg-12 mt-8">
+                        <span class="font-weight-bold text-dark-75">Opacity</span>
+                        <div class="progress progress-xs mx-3 w-100">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{10}}% ;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="font-weight-bolder text-dark">78%</span>
+                    </div>
+                </div>
+                <!--end::Content-->
+            </div>
+            <!--end::Info-->
+        </div>
+        <!--end::Details-->
+        <div class="separator separator-solid"></div>
+        <!--begin::Items-->
+        <div class="d-flex align-items-center flex-wrap mt-8">
+            <!--begin::Item-->
+            <div class="d-flex align-items-center flex-lg-fill mr-5 mb-2">
+                {% comment %} <span class="mr-4">
+                    <i class="flaticon-piggy-bank display-4 text-muted font-weight-bold"></i>
+                </span> {% endcomment %}
+                <div class="d-flex flex-column text-dark-75">
+                    <span class="font-weight-bolder font-size-sm">Total Compounds</span>
+                    <span class="font-weight-bolder font-size-h5">{{ compounds_count }}</span>
+                </div>
+            </div>
+            <!--end::Item-->
+            <!--begin::Item-->
+            <div class="d-flex align-items-center flex-lg-fill mr-5 mb-2">
+                <div class="d-flex flex-column text-dark-75">
+                    <span class="font-weight-bolder font-size-sm">Open Compounds</span>
+                    <span class="font-weight-bolder font-size-h5">{{ active_compounds_count}}</span>
+                </div>
+            </div>
+            <!--end::Item-->
+            <!--begin::Item-->
+            <div class="d-flex align-items-center flex-lg-fill mr-5 mb-2">
+                <div class="d-flex flex-column text-dark-75">
+                    <span class="font-weight-bolder font-size-sm">Total Rooms</span>
+                    <span class="font-weight-bolder font-size-h5">{{ rooms_count }}</span>
+                </div>
+            </div>
+            <!--end::Item-->
+            <!--begin::Item-->
+            <div class="d-flex align-items-center flex-lg-fill mr-5 mb-2">
+                <div class="d-flex flex-column flex-lg-fill">
+                    <span class="text-dark-75 font-weight-bolder font-size-sm">Open Rooms</span>
+                    <span class="font-weight-bolder font-size-h5">{{ open_rooms_count }}</span>
+                </div>
+            </div>
+            <!--end::Item-->
+        </div>
+        <!--begin::Items-->
+    </div>
+</div>
+<div class="subheader py-2 py-lg-6 subheader-transparent" id="kt_subheader">
+    <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+        <!--begin::Info-->
+        <div class="d-flex align-items-center flex-wrap mr-1">
+            <!--begin::Page Heading-->
+            <div class="d-flex align-items-baseline flex-wrap mr-5">
+                <!--begin::Page Title-->
+                <h5 class="text-dark font-weight-bold my-1 mr-5">Open Compounds</h5>
+                <!--end::Page Title-->
+            </div>
+            <!--end::Page Heading-->
+        </div>
+        <!--end::Toolbar-->
+    </div>
+</div>
+{% comment %} <div class="d-flex flex-row"> {% endcomment %}
     
     <!--end::Aside-->
     <!--begin::Content-->
-    <div class="flex-row-lg-fluid ml-lg-8">
+    <div class="flex-row ml-lg-8 ">
         <!--begin::Row-->
         <div class="row">
             <!--begin::Col-->
-            {% for hostel in hostels %}
-            <div class="col-xl-4">
+            {% for compound in compounds %}
+            <div class="col-xl-3">
                 <!--begin::Card-->
                 <div class="card card-custom gutter-b">
                     <!--begin::Body-->
@@ -36,14 +150,14 @@
 
                                     <!--end::Image-->
                                     <!--begin::Title--> 
-                                    <a href="./#" class="card-title font-weight-bolder text-dark-75 text-hover-primary font-size-h4 m-0 pt-7 pb-1">Hopkins High Hostel</a>
+                                    <a href="{% url 'hostels:compound_details' hostel.uuid compound.uuid %}" class="card-title font-weight-bolder text-dark-75 text-hover-primary font-size-h4 m-0 pt-7 pb-1">{{compound.name}}</a>
                                     <!--end::Title-->
                                 </div>
                             </div>
                             <!--eng::Container-->
                             <!--begin::Footer-->
-                            <div class="d-flex flex-center" id="kt_sticky_toolbar_chat_toggler_2" data-toggle="tooltip" title="" data-placement="right" data-original-title="Book Hostel">
-                                <button class="btn btn-primary font-weight-bolder font-size-sm py-3 px-14" data-toggle="modal" data-target="#kt_chat_modal">Book Hostel</button>
+                            <div class="d-flex flex-center"  data-toggle="tooltip" title="" data-placement="right" data-original-title="View compound">
+                                <a href="{% url 'hostels:compound_details' hostel.uuid compound.uuid %}" class="btn btn-primary font-weight-bolder font-size-sm py-3 px-14" >Explore</a>
                             </div>
                             <!--end::Footer-->
                         </div>
@@ -60,7 +174,7 @@
         </div>
         <!--end::Row-->
         <!--begin::Pagination-->
-        <div class="card card-custom">
+        {% comment %} <div class="card card-custom">
             <div class="card-body py-7">
                 <!--begin::Pagination-->
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
@@ -99,11 +213,11 @@
                 </div>
                 <!--end:: Pagination-->
             </div>
-        </div>
+        </div> {% endcomment %}
         <!--end::Pagination-->
     </div>
     <!--end::Content-->
-</div>
+{% comment %} </div> {% endcomment %}
 {% endblock %}
 
 

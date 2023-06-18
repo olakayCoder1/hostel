@@ -79,12 +79,17 @@ class Hostel(models.Model):
     @property
     def get_compound_count(self):
         """Returns the number of compounds in this hostel"""
-        return self.compounds.count()
+        return self.compound_set.count()
+    
+    @property
+    def get_active_compound_count(self):
+        """Returns the number of compounds in this hostel"""
+        return self.compound_set.filter(is_active=True).count()
     
     @property
     def get_room_count(self):
         """Returns the number of rooms in this hostel"""
-        return self.rooms.count()
+        return Room.objects.filter(hostel__id=self.id).count()
     
     @property
     def get_room_capacity_count(self):
@@ -94,12 +99,12 @@ class Hostel(models.Model):
     @property
     def get_open_rooms(self):
         """Returns the number of rooms in this hostel"""
-        return self.rooms.filter(is_active=True).count()
+        return Room.objects.filter(hostel__id=self.id,is_active=True).count() 
     
     @property
     def get_compounds(self):
         """Returns the number of rooms in this hostel"""
-        return self.compounds.all()
+        return self.compound_set.all()  
     
     @property
     def get_rooms(self):

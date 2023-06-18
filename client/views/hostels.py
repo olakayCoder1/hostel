@@ -12,24 +12,56 @@ class HostelsView(LoginRequiredMixin, View):
         context = {}
         if auth_user.gender == 'male':
             context['hostels'] = Hostel.objects.filter(hostel_category__name='Male') 
-        hostels = [ 1,2,3,4,5,6,7,8,9]
-        hostels = HostelCategory.objects.filter(is_active=True)
+        else:
+            context['hostels'] = Hostel.objects.filter(hostel_category__name='Female') 
         return render(request, 'client/hostels.html' , context)  
 
 
 class HostelDetailsView(View):
 
     def get(self, request , id):
-        try:
-            hostel = Hostel.objects.get(uuid=id)
-        except Hostel.DoesNotExist:
-            return render(request, 'client/hostel_details.html')
+        hostel = Hostel.objects.get(uuid=id)
+        print(hostel.name) 
         context = {
-            'hostel': hostel,
-            'compound': hostel.get_compounds(),
-
+            'hostel' : hostel,
+            'hostel_name' : hostel.name,
+            'compounds': hostel.get_compounds,
+            'compounds_count': hostel.get_compound_count,
+            'active_compounds_count': hostel.get_active_compound_count,
+            'rooms_count': hostel.get_room_count,
+            'open_rooms_count': hostel.get_open_rooms
+            
         }
-        return render(request, 'client/hostel_details.html' )  
+        
+        return render(request, 'client/hostel_details.html' ,context)  
+
+
+
+
+
+class CompoundDetailsView(View):
+
+    def get(self, request , hostel_id, compound_id ):
+        hostel = Hostel.objects.get(uuid=hostel_id)
+
+        compound = Compound.objects.filter(uuid=compound_id, hostel__uuid=hostel_id).first() 
+        print(compound.name) 
+
+        page_name = f"{hostel.name} : {compound.name}" 
+        context = {
+            'page_name' : page_name,
+            'hostel' : hostel,
+            'compound' : compound,
+            'hostel_name' : hostel.name,
+            'compounds': hostel.get_compounds,
+            'compounds_count': hostel.get_compound_count,
+            'active_compounds_count': hostel.get_active_compound_count,
+            'rooms_count': hostel.get_room_count,
+            'open_rooms_count': hostel.get_open_rooms
+            
+        }
+        
+        return render(request, 'client/hostel_compound_details.html' ,context)   
 
 
 

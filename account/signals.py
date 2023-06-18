@@ -9,7 +9,7 @@ import os
 @receiver(post_save , sender=User)
 def user_profile_signal(sender, instance , created , **kwarg):
     if created:
-        instance.uuid = str(uuid4())
+        instance.uuid = f"public_key_"+str(uuid4())
         instance.save()
         Profile.objects.create(user=instance)
 

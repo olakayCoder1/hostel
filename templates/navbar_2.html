@@ -1686,22 +1686,18 @@
                                     </a>
                                     <div class="menu-submenu menu-submenu-classic menu-submenu-right">
                                         <ul class="menu-subnav">
+                                            {% if hostels %}
+                                            {% for hostel in hostels %}
                                             <li class="menu-item" aria-haspopup="true">
-                                                <a href="{% url 'hostels:hostels' %}" class="menu-link">
+                                                <a href="{% url 'hostels:hostel_details' hostel.uuid %}" class="menu-link">
                                                     <i class="menu-bullet menu-bullet-dot">
                                                         <span></span>
                                                     </i>
-                                                    <span class="menu-text">Lagos Hostel</span>
+                                                    <span class="menu-text">{{ hostel.name }}</span>
                                                 </a>
                                             </li>
-                                            <li class="menu-item" aria-haspopup="true">
-                                                <a href="{% url 'hostels:hostels' %}"  class="menu-link">
-                                                    <i class="menu-bullet menu-bullet-dot">
-                                                        <span></span>
-                                                    </i>
-                                                    <span class="menu-text">Nasarawa Hostel</span>
-                                                </a>
-                                            </li>
+                                            {% endfor %}
+                                            {% endif %}
                                         </ul>
                                     </div>
                                 </li>

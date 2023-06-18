@@ -19,6 +19,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied , NotAuthenticated
 from account.models import User 
+from account.forms import AccountRegisterForm 
 from .serializers import ( 
     SignupSerializer,  LoginSerializer,
     ResetPasswordRequestEmailSerializer, 
@@ -217,6 +218,47 @@ class ChangePasswordView(generics.GenericAPIView):
 
 
 
+class AccountRegisterView(View):
+
+    def get(self, request):
+        return render(request, 'account/register.html')
+    
+    def post(self, request):
+        form = AccountRegisterForm(request.POST) 
+        
+        if form.is_valid():
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
+            email = form.cleaned_data.get('email')
+            gender = form.cleaned_data.get('gender')
+            password = form.cleaned_data.get('password')
+
+            # validation for unilorin student mail
+            email_pattern = r'^[a-zA-Z0-9._%+-]+@unilorin\.com$'
+
+            if re.match(email_pattern, email):
+
+                user_exist = User.objects.filter(email=email).exists()
+                if user_exist:
+                    messages.error(request, 'Student already exist')
+                    return render(request, 'account/register.html')
+                else:
+                    new_user = User.objects.create_user( 
+                        email=email,
+                        password=password,
+                        first_name=first_name,
+                        last_name=last_name,
+                        gender=gender
+                    )
+                    new_user.save()
+                    messages.success(request, 'Account created successfully - Login')
+                    return redirect('account:login')
+
+            else:
+                messages.error(request, 'Invalid student email')
+                return render(request, 'account/register.html')
+
+        return render(request, 'account/register.html')
 
 class AccountLogoutView(View):
 
