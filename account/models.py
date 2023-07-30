@@ -85,10 +85,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Profile(models.Model):
-    
     user = models.OneToOneField(User , on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=20 , null=True , blank=True)
     address = models.CharField(max_length=200 , null=True , blank=True)
+    is_disabled = models.BooleanField(default=False)
     role = models.ManyToManyField('account.UserRole')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -109,3 +109,15 @@ class UserRole(models.Model):
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
     
+
+
+class ActivationToken(models.Model):
+    TOKEN_TYPES = (
+        ('password','Password'),
+        ('account','account'),
+    )
+    user = models.ForeignKey('account.User', on_delete=models.CASCADE)
+    token = models.CharField(max_length=100)
+    is_used = models.BooleanField(default=False)
+    token_type = models.CharField(max_length=10, choices=TOKEN_TYPES)
+    created_at = models.DateTimeField(auto_now_add=True)

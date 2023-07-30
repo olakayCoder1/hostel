@@ -18,7 +18,7 @@ from rest_framework import status  , generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied , NotAuthenticated
-from account.models import User 
+from account.models import User , Profile , ActivationToken
 from account.forms import AccountRegisterForm 
 from .serializers import ( 
     SignupSerializer,  LoginSerializer,
@@ -230,14 +230,20 @@ class AccountRegisterView(View):
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
             email = form.cleaned_data.get('email')
+            disable = form.cleaned_data.get('disable')
             gender = form.cleaned_data.get('gender')
             password = form.cleaned_data.get('password')
+            password2 = form.cleaned_data.get('password2')
+
+            # validate password match
+            if password != password2:
+                messages.error(request, 'Password does not match')
+                return render(request, 'account/register.html')
 
             # validation for unilorin student mail
             email_pattern = r'^[a-zA-Z0-9._%+-]+@unilorin\.com$'
 
             if re.match(email_pattern, email):
-
                 user_exist = User.objects.filter(email=email).exists()
                 if user_exist:
                     messages.error(request, 'Student already exist')
@@ -251,14 +257,43 @@ class AccountRegisterView(View):
                         gender=gender
                     )
                     new_user.save()
+                    if disable == "yes":
+                        profile = Profile.objects.get(user__id=new_user.id)
+                        profile.is_disabled
+                        profile.save()
                     messages.success(request, 'Account created successfully - Login')
                     return redirect('account:login')
-
             else:
                 messages.error(request, 'Invalid student email')
                 return render(request, 'account/register.html')
 
         return render(request, 'account/register.html')
+
+
+
+
+class AccountActivationView(View):
+
+    def get(self, request):
+        uuidb64 = request.GET.get('safe',None)
+        token = request.GET.get('token',None)
+
+        if not token:
+            messages.error(request, 'Invalid account activation link')
+            return render(request, 'account/register.html')
+        try:
+            id = smart_str(urlsafe_base64_decode(uuidb64))
+            user = User.objects.get(id=id)
+            token_obj = ActivationToken.objects.filter(user__id=id, token=token, token_type='account').first()
+            user.email_verified = True
+            user.save()
+            messages.error(request, 'Account activated')
+            return redirect('account:login')
+        except:
+            messages.error(request, 'Invalid account activation link')
+            return render(request, 'account/register.html')
+
+
 
 class AccountLogoutView(View):
 
@@ -306,6 +341,16 @@ class AccountLoginView(View):
 
 
 def register(request):
+    if request.method == 'POST':
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        gender = request.POST['gender']
+        disable = request.POST['disable']
+        password = request.POST['password']
+        password2 = request.POST['password2']
+
+        print(first_name , last_name , gender , disable , password , password2)
+
     return render(request, 'account/register.html')
 
 def forget_password(request):

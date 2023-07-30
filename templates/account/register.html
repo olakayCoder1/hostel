@@ -47,12 +47,32 @@
                     <span class="form-text text-muted">Select your gender</span>
                 </div>
             </div>
+            <div class="form-group row">
+                <label class="col-3 col-form-label">Are you a disable student</label>
+                <div class="col-9 col-form-label">
+                    <div class="radio-inline">
+                        <label class="radio radio-success">
+                            <input type="radio" name="disable" value='yes' />
+                            <span></span>
+                            Yes
+                        </label>
+                        <label class="radio radio-success">
+                            <input type="radio" name="disable" value='no' />
+                            <span></span>
+                            No
+                        </label>
+                    </div>
+                    <span class="form-text text-muted">Select disability status</span>
+                </div>
+            </div>
             <!--end::Form group-->
             <!--begin::Form group-->
             <div class="form-group">
                 <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="password" placeholder="Password" name="password" autocomplete="off" required/>
             </div>
-
+            <div class="form-group">
+                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="password" placeholder="Confirm Password" name="password2" autocomplete="off" required/>
+            </div>
             <!--begin::Form group-->
             {% comment %} <div class="form-group">
                 <label class="checkbox mb-0">
