@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+import secrets
 from django.contrib.auth.models import AbstractBaseUser , PermissionsMixin ,BaseUserManager
 # Create your models here.
 
@@ -85,11 +86,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Profile(models.Model):
-    
     user = models.OneToOneField(User , on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=20 , null=True , blank=True)
     address = models.CharField(max_length=200 , null=True , blank=True)
-    role = models.ManyToManyField('account.UserRole')
+    is_disabled = models.BooleanField(default=False)
+    role = models.ManyToManyField('account.UserRole', blank=True, null=True) 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -109,3 +110,47 @@ class UserRole(models.Model):
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
     
+
+
+class ActivationToken(models.Model):
+    TOKEN_TYPES = (
+        ('password','Password'),
+        ('account','account'),
+    )
+    user = models.ForeignKey('account.User', on_delete=models.CASCADE)
+    token = models.CharField(max_length=100)
+    is_used = models.BooleanField(default=False)
+    token_type = models.CharField(max_length=10, choices=TOKEN_TYPES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+
+
+class Transaction(models.Model):
+    TRANSACTION_STATUS = (
+        ('pending','Pending'),
+        ('success','Success'),
+        ('failed','Failed'),
+    )
+    user = models.ForeignKey('account.User', on_delete=models.CASCADE)
+    reference = models.CharField(max_length=100)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=10, choices=TRANSACTION_STATUS, default='pending')
+    compound = models.ForeignKey('client.Compound', on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+
+    def save(self, *args, **kwargs) -> None:
+        while not self.reference:
+            reference = secrets.token_urlsafe(20)
+            ref_exist = Transaction.objects.filter(reference=reference).exists()
+            if not ref_exist:
+                self.reference = reference
+        super().save(*args, **kwargs)
+
+
+    def amount_value(self)-> int:
+        return int(self.amount * 100)

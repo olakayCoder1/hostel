@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import HostelCategory, Compound, Room, Hostel, Booking, Document
+from .models import Compound, Room, Hostel, Booking, Document
 
 
 
@@ -8,8 +8,7 @@ class HostelInline(admin.StackedInline):
     model = Hostel
     extra = 2
 
-class HostelCategoryAdmin(admin.ModelAdmin):
-    inlines = [HostelInline]
+
 
 
 class RoomInline(admin.StackedInline):
@@ -28,7 +27,7 @@ class HostelAdmin(admin.ModelAdmin):
     inlines = [CompoundInline]
 
 
-admin.site.register(HostelCategory,HostelCategoryAdmin)
+
 admin.site.register(Compound, CompoundAdmin)
 admin.site.register(Room)
 admin.site.register(Hostel, HostelAdmin)

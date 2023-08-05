@@ -3,7 +3,7 @@
 
 {% load static %}
 {% block title %}
-   <title>Hostels</title>
+   <title>Home</title>
 {% endblock %}
 
 {% block subheader  %}
@@ -11,8 +11,11 @@
 {% endblock %}
 
 {% block page_content %}
+
+{% if hostels %}
 <div class="flex-row ml-lg-8">
     <!--begin::Row-->
+
     <div class="row">
         <!--begin::Col-->
         {% for hostel in hostels %}
@@ -42,7 +45,7 @@
                         <!--eng::Container-->
                         <!--begin::Footer-->
                         <div class="d-flex flex-center"  data-toggle="tooltip" title="" data-placement="right" data-original-title="View Hostel">
-                            <a href="{% url 'hostels:hostel_details' hostel.uuid %}" class="btn btn-primary font-weight-bolder font-size-sm py-3 px-14" >View Hostel</a>
+                            <a href="{% url 'hostels:hostel_details' hostel.uuid %}" class="btn btn-primary font-weight-bolder font-size-sm py-3 px-14" >{{custom_data}} View Hostel</a>
                         </div>
                         <!--end::Footer-->
                     </div>
@@ -59,6 +62,9 @@
     </div>
     <!--end::Row-->
 </div>
+{% else%}
+{% include 'empty.html' with title='All hostels are currently occupied' description='We regret to inform you that all our hostels are currently fully occupied. We understand that this may cause inconvenience, especially if you were looking to make a booking.'  %}
+{% endif %}
 {% endblock %}
 
 
@@ -85,8 +91,8 @@
                 </div>
                 <!--eng::Container-->
                 <!--begin::Footer-->
-                <div class="d-flex flex-center" data-toggle="tooltip" title="" data-placement="right" data-original-title="Book Hostel">
-                    <button class="btn btn-primary font-weight-bolder font-size-sm py-3 px-14" >View Hostel</button>
+                <div class="d-flex flex-center" id="kt_sticky_toolbar_chat_toggler_2" data-toggle="tooltip" title="" data-placement="right" data-original-title="Book Hostel">
+                    <button class="btn btn-primary font-weight-bolder font-size-sm py-3 px-14" data-toggle="modal" data-target="#kt_chat_modal">Book Hostel</button>
                 </div>
                 <!--end::Footer-->
             </div>

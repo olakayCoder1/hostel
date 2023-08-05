@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.contrib import messages
-from django.shortcuts import render , redirect
+from django.shortcuts import render , redirect , reverse 
 from django.utils.encoding import DjangoUnicodeDecodeError, smart_str
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator 
@@ -18,7 +18,8 @@ from rest_framework import status  , generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied , NotAuthenticated
-from account.models import User 
+from account.models import User , Profile , ActivationToken
+from account.forms import AccountRegisterForm 
 from .serializers import ( 
     SignupSerializer,  LoginSerializer,
     ResetPasswordRequestEmailSerializer, 
@@ -127,61 +128,60 @@ class LoginApiView(generics.GenericAPIView):
 
 
 
-class ResetPasswordRequestEmailApiView(generics.GenericAPIView):
+class ResetPasswordRequestEmailApiView(View):
     """
     This view handle sending of reset password link to user email
     """
-    serializer_class = ResetPasswordRequestEmailSerializer
+    def get(self, request):
+        return render(request, 'account/forget_password.html')
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            try:
-                user = User.objects.get(email=serializer.validated_data['email'])
-                Thread(target=MailServices.forget_password_mail, kwargs={ 'user': user }).start()
-                return Response( 
-                        {'success':True , 'detail': 'Password reset instruction will be sent to the mail' },
-                        status=status.HTTP_200_OK
-                        )
-            except:
-                return Response( 
-                    {'success':True , 'detail': 'Password reset instruction will be sent to the mail' }, 
-                    status=status.HTTP_200_OK
-                    )
-        return Response( 
-                    {'success':False , 'detail': serializer.errors },  
-                    status=status.HTTP_400_BAD_REQUEST
-                    )
+        email = request.data.get('email', None)
+
+        if not email:
+            messages.error(request, 'Please fill all fields')
+            return render(request, 'account/forget_password.html')
+        try:
+            user = User.objects.get(email=email)
+            Thread(target=MailServices.forget_password_mail, kwargs={ 'user': user }).start()
+            messages.success(request, 'Password reset instruction will be sent to the mail')
+            return render(request, 'account/forget_password.html')
+        except:
+            messages.success(request, 'Email does not exist')
+            return render(request, 'account/forget_password.html')
 
 
 
-class SetNewPasswordTokenCheckApi(generics.GenericAPIView):
+class SetNewPasswordTokenCheckApi(View):
     """
     This view handle changing of user password on forget password
     """
-    serializer_class = SetNewPasswordSerializer
+
+    def get(self,request):
+        return render(request, 'account/set_password.html')
 
 
     def post(self, request, token , uuidb64 ):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            try:
-                id = smart_str(urlsafe_base64_decode(uuidb64))
-                user = User.objects.get(id=id)
-                password1 = serializer.validated_data['password1']
-                password2 = serializer.validated_data['password2']
-                if password1 != password2 :
-                    return  Response({'success':False ,'detail': 'Password does not match'} , status=status.HTTP_400_BAD_REQUEST)
-                if PasswordResetTokenGenerator().check_token(user, token):
-                    data = request.data
-                    serializer = self.serializer_class(data=data)
-                    serializer.is_valid(raise_exception=True)
-                    user.set_password(serializer.validated_data['password1'])
-                    user.save() 
-                    return Response({'success':True , 'detail':'Password updated successfully'}, status=status.HTTP_200_OK)
-                return Response({'success':False ,'detail':'Token is not valid'}, status=status.HTTP_400_BAD_REQUEST)
-            except DjangoUnicodeDecodeError as identifier:
-                return Response({'success':False ,'detail': 'Token is not valid'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            id = smart_str(urlsafe_base64_decode(uuidb64))
+            user = User.objects.get(id=id)
+            password1 = request.data.get('password1',None)
+            password2 = request.data.get('password2',None)
+            if password1 != password2 :
+                messages.error(request, 'Password does not match')
+                return render(request, 'account/set_password.html')
+            
+            if PasswordResetTokenGenerator().check_token(user, token):
+                user.set_password(password1)
+                user.save() 
+                messages.success(request, 'Password updated successfully')
+                return redirect('account:login')
+            
+            messages.error(request, 'Invalid token')
+            return render(request, 'account/set_password.html')
+        except DjangoUnicodeDecodeError as identifier:
+            messages.error(request, 'Invalid token')
+            return render(request, 'account/set_password.html')
 
 
 
@@ -217,6 +217,103 @@ class ChangePasswordView(generics.GenericAPIView):
 
 
 
+class AccountRegisterView(View):
+
+    def get(self, request):
+        return render(request, 'account/register.html')
+    
+    def post(self, request):
+        first_name = request.POST.get('first_name', None)
+        last_name = request.POST.get('last_name', None)
+        email = request.POST.get('email', None)
+        disable = request.POST.get('disable', None)
+        gender = request.POST.get('gender' , None)
+        password = request.POST.get('password', None)
+        password2 = request.POST.get('password2', None)
+
+        if ( not first_name or not last_name or not email or \
+            not disable or not gender or not password or not password2):
+            messages.error(request, 'Please fill all fields')
+            return render(request, 'account/register.html')
+
+        # validate password match
+        if password != password2:
+            messages.error(request, 'Password does not match')
+            return render(request, 'account/register.html')
+
+        # validation for unilorin student mail
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@unilorin\.com$'
+
+        if True:
+        # if re.match(email_pattern, email):
+            user_exist = User.objects.filter(email=email).exists()
+            if user_exist:
+                messages.error(request, 'Student already exist')
+                return render(request, 'account/register.html')
+            else:
+                new_user = User.objects.create_user( 
+                    email=email,
+                    password=password,
+                    first_name=first_name,
+                    last_name=last_name,
+                    gender=gender,
+                    is_active=False,
+                )
+                new_user.save()
+                if disable == "yes":
+                    profile = Profile.objects.filter(user__id=new_user.id).first()
+                    profile.is_disabled
+                    profile.save()
+                token = uuid4().hex
+                activation_base = request.build_absolute_uri(reverse('account:activation'))
+                acivation_token = ActivationToken.objects.create(user=new_user, token_type='account', token=token)
+                messages.success(request, 'Account activation link has been sent to your mail')
+                Thread(target=MailServices.send_account_activation_mail, kwargs={ 
+                    'user': new_user, 'token':token , 'url' : activation_base }).start()
+                return redirect('account:login')
+
+        return render(request, 'account/register.html')
+
+
+
+
+class AccountActivationView(View):
+    """
+    This view handle account activation
+    """
+
+    def get(self, request):
+        uuidb64 = request.GET.get('safe',None)
+        token = request.GET.get('token',None)
+        
+        if not token or not uuidb64: 
+            messages.error(request, 'Invalid account activation link')
+            return redirect('account:register')
+        try:
+            id = smart_str(urlsafe_base64_decode(uuidb64))
+            user = User.objects.get(id=id)
+            token_obj = ActivationToken.objects.filter(user=user, token=token, token_type='account').first()
+            print(token_obj)
+            if not token_obj:
+                print('***'*100)
+                print(uuidb64)
+                print(token) 
+                print('***'*100)
+                messages.error(request, 'Invalid account activation link')
+                return redirect('account:register')
+            token_obj.is_used = True
+            token_obj.save()
+            user.email_verified = True
+            user.is_active = True
+            user.save()
+            messages.success(request, 'Account activated- Login to continue')
+            return redirect('account:login')
+        except:
+
+            messages.error(request, 'Invalid account activation link')
+            return redirect('account:register')
+
+
 
 class AccountLogoutView(View):
 
@@ -232,9 +329,9 @@ class AccountLoginView(View):
     def post(self, request):
         email = request.POST.get('email')
         password = request.POST.get('password')
-        print(email, password)
         if not email or not password:
             messages.error(request, 'Please fill all fields')
+            return render(request, 'account/login.html') 
         if is_valid_email(email): 
             user = authenticate(email=email , password=password)
             if user:
@@ -242,17 +339,18 @@ class AccountLoginView(View):
                     redirect_url = request.GET.get('next', '/') 
                     auth_login(request, user)
                     return redirect(redirect_url) 
-                
                 else:
                     messages.error(request, 'Your account is disabled, kindly contact the administrative')
+                    return render(request, 'account/login.html') 
 
             else:
-                messages.error(request, 'Invalid login credential')  
+                messages.error(request, 'Invalid login credential') 
+                return render(request, 'account/login.html')  
 
         else:
             messages.error(request, 'Invalid email address')
+            return render(request, 'account/login.html') 
         
-        return render(request, 'account/login.html') 
 
 
     def get(self, request):
@@ -263,8 +361,6 @@ class AccountLoginView(View):
 
 
 
-def register(request):
-    return render(request, 'account/register.html')
 
 def forget_password(request):
     return render(request, 'account/forget_password.html')

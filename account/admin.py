@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User 
+from .models import User , ActivationToken , Profile ,Transaction
 # Register your models here.
 
 class PreferenceModelAdmin(admin.ModelAdmin):
@@ -26,3 +26,6 @@ class UserAdmin(UserAdmin):
     
 
 admin.site.register(User, UserAdmin)
+admin.site.register(ActivationToken)
+admin.site.register(Profile)
+admin.site.register(Transaction)

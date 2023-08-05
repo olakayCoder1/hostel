@@ -1,42 +1,91 @@
 from django.views import View
-from django.shortcuts import render
-from client.models import ( HostelCategory, Compound, Room , Hostel, Booking, Document )
+from django.shortcuts import render, reverse, redirect
+from django.db.models import Count
+from client.models import ( Compound, Room , Hostel, Booking, Document , Accomodation)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from account.models import User
+from helpers.main import Injector
+from helpers.utils.hostel import HostelManager
+from django.conf import settings
 
-
-class HostelsView(LoginRequiredMixin, View):
+class HostelsView(LoginRequiredMixin , View,HostelManager, Injector):
 
     def get(self, request):
+        context = self.get_inject_context()
         auth_user = User.objects.get(id=request.user.id)
-        context = {}
-        if auth_user.gender == 'male':
-            context['hostels'] = Hostel.objects.filter(hostel_category__name='Male') 
-        hostels = [ 1,2,3,4,5,6,7,8,9]
-        hostels = HostelCategory.objects.filter(is_active=True)
+
+        has_booked = Accomodation.objects.filter(user__id=request.user.id, is_active=True).exists()
+        if has_booked:
+            context['has_booked'] = True
+            return render(request, 'client/hostels.html' , context)
+        
+        context['hostels'] = self.get_available_hostel()
         return render(request, 'client/hostels.html' , context)  
 
 
-class HostelDetailsView(View):
+
+class HostelDetailsView(LoginRequiredMixin,View , HostelManager,Injector ):
 
     def get(self, request , id):
-        try:
-            hostel = Hostel.objects.get(uuid=id)
-        except Hostel.DoesNotExist:
-            return render(request, 'client/hostel_details.html')
+        # get_open_compounds
+        hostel = Hostel.objects.get(uuid=id)
+        context = self.get_inject_context() 
+
+        payent_initialise_url = reverse('initiate_payment')
+
+        print(payent_initialise_url)
+        context.update({
+            "payment_public_key": settings.PAYSTACK_PUBLIC_KEY,
+            'hostel' : hostel,
+            'hostel_name' : hostel.name,
+            'compounds': self.get_open_compounds(hostel),
+            'compounds_count': hostel.get_compound_count,
+            'active_compounds_count': hostel.get_active_compound_count,
+            'rooms_count': hostel.get_room_count,
+            'open_rooms_count': hostel.get_open_rooms
+        })
+        
+        return render(request, 'client/hostel_details.html' ,context)  
+
+
+
+
+
+class CompoundDetailsView(LoginRequiredMixin,View,Injector):
+
+    def get(self, request , hostel_id, compound_id ):
+        hostel = Hostel.objects.get(uuid=hostel_id)
+
+        compound = Compound.objects.filter(uuid=compound_id, hostel__uuid=hostel_id).first() 
+        print(compound.name) 
+        payent_initialise_path = reverse('initiate_payment')
+        payent_initialise_url = request.build_absolute_uri(payent_initialise_path)
+        print(payent_initialise_url)
+        page_name = f"{hostel.name} : {compound.name}" 
         context = {
-            'hostel': hostel,
-            'compound': hostel.get_compounds(),
-
+            "payment_public_key": settings.PAYSTACK_PUBLIC_KEY,
+            'payent_initialise_url': payent_initialise_url,
+            'page_name' : page_name,
+            'hostel' : hostel,
+            'compound' : compound,
+            'hostel_name' : hostel.name,
+            'compounds': hostel.get_compounds,
+            'compounds_count': hostel.get_compound_count,
+            'active_compounds_count': hostel.get_active_compound_count,
+            'rooms_count': hostel.get_room_count,
+            'open_rooms_count': hostel.get_open_rooms,
+            'open_rooms': hostel.get_open_rooms
+            
         }
-        return render(request, 'client/hostel_details.html' )  
+        
+        return render(request, 'client/hostel_compound_details.html' ,context)   
 
 
 
 
 
 
-class HostelApplicationView(View):
+class HostelApplicationView(LoginRequiredMixin,View,Injector):
 
     def get(self, request):
         return render(request, 'client/hostel_application.html')
@@ -48,7 +97,7 @@ class HostelApplicationView(View):
 
 
 
-class HostelAccreditationView(View):
+class HostelAccreditationView(LoginRequiredMixin,View,Injector):
 
     def get(self, request):
         return render(request, 'client/hostel_accreditation.html')

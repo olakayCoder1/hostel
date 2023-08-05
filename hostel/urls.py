@@ -19,13 +19,16 @@ from django.urls import path , include
 from client.views.clients import DashboardView
 from django.conf.urls.static import static
 from django.conf import settings
-
+from .views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', DashboardView.as_view(), name='dashboard'),
     path('account/', include('account.urls')),
     path('hostels/', include('client.urls.hostels')),  
+    # path('hostels/', InitiatePayment.as_view(), name='initiate-payment'),  
+    path('initiate_payment/',InitiatePayment.as_view(), name='initiate_payment'), 
+    path('verify_payment/', VerifyPayment.as_view(), name='verify_payment'),
 ]
 
 
