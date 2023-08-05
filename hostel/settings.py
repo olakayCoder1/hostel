@@ -69,7 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'account.middleware.HostelListMiddleware', 
+    'account.middleware.HostelListMiddleware', 
 ]
 
 PAYSTACK_SECRET_KEY='sk_test_f2c4c12c87df60bc178d3be7a19ba4a975d17527'

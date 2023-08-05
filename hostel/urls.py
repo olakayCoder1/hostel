@@ -26,9 +26,11 @@ urlpatterns = [
     path('', DashboardView.as_view(), name='dashboard'),
     path('account/', include('account.urls')),
     path('hostels/', include('client.urls.hostels')),  
+    path('myspace/', MyApplication.as_view(), name='my-application'),  
     # path('hostels/', InitiatePayment.as_view(), name='initiate-payment'),  
-    path('initiate_payment/',InitiatePayment.as_view(), name='initiate_payment'), 
-    path('verify_payment/', VerifyPayment.as_view(), name='verify_payment'),
+    path('initiate_payment',InitiatePayment.as_view(), name='initiate_payment'), 
+    path('verify_payment', VerifyPayment.as_view(), name='verify_payment'),
+    path('validate_code', VerifyPayment.as_view(), name='validate_code'),
 ]
 
 

@@ -187,6 +187,8 @@ class Room(models.Model):
 
 
 
+def upload_to(instance, filename):
+    return 'booking/{filename}'.format(filename=filename)
 
 class Booking(models.Model):
     """
@@ -205,8 +207,13 @@ class Booking(models.Model):
     user = models.ForeignKey('account.User', on_delete=models.CASCADE)
     hostel = models.ForeignKey('client.Hostel', on_delete=models.CASCADE)
     compound = models.ForeignKey('client.Compound', on_delete=models.CASCADE)
+    room_code = models.CharField(max_length=100, null=True, blank=True)
+    qr_code = models.ImageField( 
+        upload_to=upload_to , null=True , blank=True ,
+    )
     status = models.CharField(max_length=10, default='pending')
     payment_status = models.CharField(max_length=10, default='pending')
+    transaction = models.OneToOneField('account.Transaction', on_delete=models.CASCADE, null=True, blank=True)
     expiration_date = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

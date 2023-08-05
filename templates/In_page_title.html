@@ -14,11 +14,11 @@
         <!--begin::Toolbar-->
         <div class="d-flex align-items-center">
             <!--begin::Actions-->
-            <a href="#" class="btn btn-light-primary font-weight-bolder btn-sm">Actions</a>
+            {% comment %} <a href="#" class="btn btn-light-primary font-weight-bolder btn-sm">Actions</a> {% endcomment %}
             <!--end::Actions-->
             <!--begin::Dropdown-->
             <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Quick actions" data-placement="left">
-                <a href="#" class="btn btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {% comment %} <a href="#" class="btn btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="svg-icon svg-icon-success svg-icon-2x">
                         <!--begin::Svg Icon | path:{% static 'assets/media/svg/icons/Files/File-plus.svg-->
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -30,7 +30,7 @@
                         </svg>
                         <!--end::Svg Icon-->
                     </span>
-                </a>
+                </a> {% endcomment %}
                 <div class="dropdown-menu dropdown-menu-md dropdown-menu-right p-0 m-0">
                     <!--begin::Navigation-->
                     <ul class="navi navi-hover">
