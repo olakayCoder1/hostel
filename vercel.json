@@ -5,12 +5,7 @@
         "config": {
              "maxLambdaSize": "15mb",
              "runtime": "python3.9"
-             },
-        "build": {
-            "commands": [
-                "pip install sqlite"
-            ]
-            }
+             }
     }],
     "routes": [{
         "src": "/(.*)",
