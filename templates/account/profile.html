@@ -32,8 +32,8 @@
                         <i class="symbol-badge bg-success"></i>
                     </div>
                     <div>
-                        <a href="{% url 'account:profile' %}" class="font-weight-bolder font-size-h5 text-dark-75 text-hover-primary">James Jones</a>
-                        <div class="text-muted">Application Developer</div>
+                        <a href="{% url 'account:profile' %}" class="font-weight-bolder font-size-h5 text-dark-75 text-hover-primary">{{ request.user.first_name}} {{request.user.last_name}}</a>
+                        <div class="text-muted">{{ request.user.email}}</div>
                         <div class="mt-2">
                         </div>
                     </div>
@@ -41,18 +41,6 @@
                 <!--end::User-->
                 <!--begin::Contact-->
                 <div class="py-9">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <span class="font-weight-bold mr-2">Email:</span>
-                        <a href="{% url 'account:profile' %}" class="text-muted text-hover-primary">matt@fifestudios.com</a>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <span class="font-weight-bold mr-2">Phone:</span>
-                        <span class="text-muted">44(76)34254578</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between">
-                        <span class="font-weight-bold mr-2">Location:</span>
-                        <span class="text-muted">Melbourne</span>
-                    </div>
                 </div>
                 <!--end::Contact-->
                 <!--begin::Nav-->
@@ -91,7 +79,7 @@
                                     <!--end::Svg Icon-->
                                 </span>
                             </span>
-                            <span class="navi-text font-size-lg">Account Information</span>
+                            <span class="navi-text font-size-lg">Account Security</span>
                         </a>
                     </div>
                     <div class="navi-item mb-2">
@@ -127,7 +115,9 @@
     <!--begin::Content-->
     <div class="flex-row-fluid ml-lg-8">
         <!--begin::Card-->
-        <div class="card card-custom card-stretch">
+        <form class="form card card-custom card-stretch"  id="myForm" >
+        {% csrf_token %}
+        {% comment %} <div class="card card-custom card-stretch"> {% endcomment %}
             <!--begin::Header-->
             <div class="card-header py-3">
                 <div class="card-title align-items-start flex-column">
@@ -135,58 +125,86 @@
                     <span class="text-muted font-weight-bold font-size-sm mt-1">Update your personal informaiton</span>
                 </div>
                 <div class="card-toolbar">
-                    <button type="reset" class="btn btn-success mr-2">Save Changes</button>
+                    <button  type="submit"  class="btn btn-success mr-2">Save Changes</button>
                     <button type="reset" class="btn btn-secondary">Cancel</button>
                 </div>
             </div>
             <!--end::Header-->
             <!--begin::Form-->
-            <form class="form">
+            {% comment %} <form class="form"> {% endcomment %}
                 <!--begin::Body-->
                 <div class="card-body">
                     <div class="row">
                         <label class="col-xl-3"></label>
                         <div class="col-lg-9 col-xl-6">
-                            <h5 class="font-weight-bold mb-6">Customer Info</h5>
+                            <h5 class="font-weight-bold mb-6">User Info</h5>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-xl-3 col-lg-3 col-form-label">Avatar</label>
-                        <div class="col-lg-9 col-xl-6">
-                            <div class="image-input image-input-outline" id="kt_profile_avatar" style="background-image: url(assets/media/users/blank.png)">
-                                <div class="image-input-wrapper" style="background-image: url(assets/media/users/300_21.jpg)"></div>
-                                <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
-                                    <i class="fa fa-pen icon-sm text-muted"></i>
-                                    <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg" />
-                                    <input type="hidden" name="profile_avatar_remove" />
-                                </label>
-                                <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="cancel" data-toggle="tooltip" title="Cancel avatar">
-                                    <i class="ki ki-bold-close icon-xs text-muted"></i>
+                    <div id='alertMessage'></div>
+                    <div id="errorAlert" style="display:none" class="alert alert-custom alert-light-danger fade show mb-10" role="alert">
+                        <div class="alert-icon">
+                            <span class="svg-icon svg-icon-3x svg-icon-danger">
+                                <!--begin::Svg Icon | path:assets/media/svg/icons/Code/Info-circle.svg-->
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24" />
+                                        <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
+                                        <rect fill="#000000" x="11" y="10" width="2" height="7" rx="1" />
+                                        <rect fill="#000000" x="11" y="7" width="2" height="2" rx="1" />
+                                    </g>
+                                </svg>
+                                <!--end::Svg Icon-->
+                            </span>
+                        </div>
+                        <div class="alert-text font-weight-bold" id="fetchMessage">
+                            Configure user passwords to expire periodically. Users will need warning that their passwords are going to expire,
+                        </div>
+                        <div class="alert-close">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">
+                                    <i class="ki ki-close"></i>
                                 </span>
-                                <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="remove" data-toggle="tooltip" title="Remove avatar">
-                                    <i class="ki ki-bold-close icon-xs text-muted"></i>
-                                </span>
-                            </div>
-                            <span class="form-text text-muted">Allowed file types: png, jpg, jpeg.</span>
+                            </button>
                         </div>
                     </div>
+                    <div id="successAlert" style="display:none" class="alert alert-custom alert-success fade show mb-10" role="alert">
+                        <div class="alert-icon">
+                            <span class="svg-icon svg-icon-3x svg-icon-light">
+                                <!--begin::Svg Icon | path:assets/media/svg/icons/Code/Info-circle.svg-->
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24" />
+                                        <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
+                                        <rect fill="#000000" x="11" y="10" width="2" height="7" rx="1" />
+                                        <rect fill="#000000" x="11" y="7" width="2" height="2" rx="1" />
+                                    </g>
+                                </svg>
+                                <!--end::Svg Icon-->
+                            </span>
+                        </div>
+                        <div class="alert-text font-weight-bold" id="fetchMessage">
+                            Configure user passwords to expire periodically. Users will need warning that their passwords are going to expire,
+                        </div>
+                        <div class="alert-close">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">
+                                    <i class="ki ki-close"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    
                     <div class="form-group row">
                         <label class="col-xl-3 col-lg-3 col-form-label">First Name</label>
                         <div class="col-lg-9 col-xl-6">
-                            <input class="form-control form-control-lg form-control-solid" type="text" value="Nick" />
+                            <input class="form-control form-control-lg form-control-solid" type="text" name="first_name" value="{{ request.user.first_name }}" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-xl-3 col-lg-3 col-form-label">Last Name</label>
                         <div class="col-lg-9 col-xl-6">
-                            <input class="form-control form-control-lg form-control-solid" type="text" value="Bold" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-xl-3 col-lg-3 col-form-label">Company Name</label>
-                        <div class="col-lg-9 col-xl-6">
-                            <input class="form-control form-control-lg form-control-solid" type="text" value="Loop Inc." />
-                            <span class="form-text text-muted">If you want your invoices addressed to a company. Leave blank to use your full name.</span>
+                            <input class="form-control form-control-lg form-control-solid" type="text" name="last_name" value="{{request.user.last_name}}" />
                         </div>
                     </div>
                     <div class="row">
@@ -204,7 +222,7 @@
                                         <i class="la la-phone"></i>
                                     </span>
                                 </div>
-                                <input type="text" class="form-control form-control-lg form-control-solid" value="+35278953712" placeholder="Phone" />
+                                <input type="text" name="phone_number" class="form-control form-control-lg form-control-solid" value="{{ request.user.profile.phone_number}}" placeholder="Phone" />
                             </div>
                             <span class="form-text text-muted">We'll never share your email with anyone else.</span>
                         </div>
@@ -218,27 +236,110 @@
                                         <i class="la la-at"></i>
                                     </span>
                                 </div>
-                                <input type="text" class="form-control form-control-lg form-control-solid" value="nick.bold@loop.com" placeholder="Email" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-xl-3 col-lg-3 col-form-label">Company Site</label>
-                        <div class="col-lg-9 col-xl-6">
-                            <div class="input-group input-group-lg input-group-solid">
-                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Username" value="loop" />
-                                <div class="input-group-append">
-                                    <span class="input-group-text">.com</span>
-                                </div>
+                                <input type="text" class="form-control form-control-lg form-control-solid" value="{{request.user.email}}" placeholder="Email" disabled/>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!--end::Body-->
-            </form>
+            {% comment %} </form> {% endcomment %}
             <!--end::Form-->
-        </div>
+        {% comment %} </div> {% endcomment %}
+        </form>
     </div>
     <!--end::Content-->
 </div>
+
+<script>
+{% comment %} alert('Hello world') {% endcomment %}
+
+    const myForm = document.getElementById('myForm');
+    // Add the event listener
+    myForm.addEventListener('submit', function(event) {
+        // Prevent the form from submitting immediately
+        event.preventDefault();
+
+        // Your custom logic here
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        // For example, you can validate form data
+        const first_name = myForm.querySelector('input[name="first_name"]').value;
+        const last_name = myForm.querySelector('input[name="last_name"]').value;
+        const phone_number = myForm.querySelector('input[name="phone_number"]').value;
+
+        const inputFields = myForm.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="checkbox"]');
+
+
+        const url = "{% url 'account:profile_info_update' %}"
+        const data = {
+            'first_name': first_name,
+            'last_name': last_name,
+            'phone_number': phone_number,
+        }
+
+        const response = fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(updatedUser => {
+            console.log('User updated:', updatedUser);
+        
+            const fetchMessageElement = document.getElementById('fetchMessage');
+
+            if (fetchMessageElement) {
+                fetchMessageElement.innerHTML = updatedUser.detail;
+            }
+            const olaayElement = document.getElementById('alertMessage');
+            if (olaayElement) {
+                olaayElement.innerHTML = `
+                    <div  class="alert alert-custom ${updatedUser.status ? "alert-success ": "alert-danger"} fade show mb-10" role="alert">
+                        <div class="alert-icon">
+                            <span class="svg-icon svg-icon-3x svg-icon-light">
+                                <!--begin::Svg Icon | path:assets/media/svg/icons/Code/Info-circle.svg-->
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24" />
+                                        <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
+                                        <rect fill="#000000" x="11" y="10" width="2" height="7" rx="1" />
+                                        <rect fill="#000000" x="11" y="7" width="2" height="2" rx="1" />
+                                    </g>
+                                </svg>
+                                <!--end::Svg Icon-->
+                            </span>
+                        </div>
+                        <div class="alert-text font-weight-bold" id="fetchMessage">
+                            ${updatedUser.detail}
+                        </div>
+                        <div class="alert-close">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">
+                                    <i class="ki ki-close"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>`;
+            }
+
+            if( updatedUser.status ){
+                setTimeout(function() {
+                    window.location.reload();
+                    }, 1500);
+            } 
+            
+        })
+        .catch(error => {
+            console.error('Error updating user:', error);
+        });
+    
+
+        // If validation passes, you can submit the form programmatically
+        //myForm.submit();
+    });
+
+
+</script>
 {% endblock %}

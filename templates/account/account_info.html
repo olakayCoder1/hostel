@@ -32,8 +32,8 @@
                         <i class="symbol-badge bg-success"></i>
                     </div>
                     <div>
-                        <a href="#" class="font-weight-bolder font-size-h5 text-dark-75 text-hover-primary">James Jones</a>
-                        <div class="text-muted">Application Developer</div>
+                        <a href="#" class="font-weight-bolder font-size-h5 text-dark-75 text-hover-primary">{{ request.user.first_name}} {{ request.user.last_name}}</a>
+                        <div class="text-muted">{{ request.user.email }}</div>
                         <div class="mt-2">
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                 <!--end::User-->
                 <!--begin::Contact-->
                 <div class="py-9">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
+                    {% comment %} <div class="d-flex align-items-center justify-content-between mb-2">
                         <span class="font-weight-bold mr-2">Email:</span>
                         <a href="#" class="text-muted text-hover-primary">matt@fifestudios.com</a>
                     </div>
@@ -52,7 +52,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <span class="font-weight-bold mr-2">Location:</span>
                         <span class="text-muted">Melbourne</span>
-                    </div>
+                    </div> {% endcomment %}
                 </div>
                 <!--end::Contact-->
                 <!--begin::Nav-->
@@ -91,7 +91,7 @@
                                     <!--end::Svg Icon-->
                                 </span>
                             </span>
-                            <span class="navi-text font-size-lg">Account Information</span>
+                            <span class="navi-text font-size-lg">Account Security</span>
                         </a>
                     </div>
                     <div class="navi-item mb-2">
@@ -131,7 +131,7 @@
             <!--begin::Header-->
             <div class="card-header py-3">
                 <div class="card-title align-items-start flex-column">
-                    <h3 class="card-label font-weight-bolder text-dark">Account Information</h3>
+                    <h3 class="card-label font-weight-bolder text-dark">Account Security</h3>
                     <span class="text-muted font-weight-bold font-size-sm mt-1">Change your account settings</span>
                 </div>
                 <div class="card-toolbar">
@@ -144,6 +144,12 @@
             <form class="form">
                 <div class="card-body">
                     <!--begin::Heading-->
+                    
+                    <!--begin::Form Group-->
+                    
+                    <!--begin::Form Group-->
+                    <div class="separator separator-dashed my-5"></div>
+                    <!--begin::Form Group-->
                     <div class="row">
                         <label class="col-xl-3"></label>
                         <div class="col-lg-9 col-xl-6">
@@ -152,101 +158,10 @@
                     </div>
                     <!--begin::Form Group-->
                     <div class="form-group row">
-                        <label class="col-xl-3 col-lg-3 col-form-label">Username</label>
+                        <label class="col-xl-3 col-lg-3 col-form-label">Logout</label>
                         <div class="col-lg-9 col-xl-6">
-                            <div class="spinner spinner-sm spinner-success spinner-right">
-                                <input class="form-control form-control-lg form-control-solid" type="text" value="nick84" />
-                            </div>
-                        </div>
-                    </div>
-                    <!--begin::Form Group-->
-                    <div class="form-group row">
-                        <label class="col-xl-3 col-lg-3 col-form-label">Email Address</label>
-                        <div class="col-lg-9 col-xl-6">
-                            <div class="input-group input-group-lg input-group-solid">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        <i class="la la-at"></i>
-                                    </span>
-                                </div>
-                                <input type="text" class="form-control form-control-lg form-control-solid" value="nick.watson@loop.com" placeholder="Email" />
-                            </div>
-                            <span class="form-text text-muted">Email will not be publicly displayed.
-                            <a href="#" class="font-weight-bold">Learn more</a>.</span>
-                        </div>
-                    </div>
-                    <!--begin::Form Group-->
-                    <div class="form-group row">
-                        <label class="col-xl-3 col-lg-3 col-form-label">Language</label>
-                        <div class="col-lg-9 col-xl-6">
-                            <select class="form-control form-control-lg form-control-solid">
-                                <option>Select Language...</option>
-                                <option value="id">Bahasa Indonesia - Indonesian</option>
-                                <option value="msa">Bahasa Melayu - Malay</option>
-                                <option value="ca">Català - Catalan</option>
-                                
-                                <option value="th">ภาษาไทย - Thai</option>
-                                <option value="ko">한국어 - Korean</option>
-                                <option value="ja">日本語 - Japanese</option>
-                                <option value="zh-cn">简体中文 - Simplified Chinese</option>
-                                <option value="zh-tw">繁體中文 - Traditional Chinese</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!--begin::Form Group-->
-                    <div class="form-group row">
-                        <label class="col-xl-3 col-lg-3 col-form-label">Time Zone</label>
-                        <div class="col-lg-9 col-xl-6">
-                            <select class="form-control form-control-lg form-control-solid">
-                                <option data-offset="-39600" value="International Date Line West">(GMT-11:00) International Date Line West</option>
-                                <option data-offset="-39600" value="Midway Island">(GMT-11:00) Midway Island</option>
-                                <option data-offset="-39600" value="Samoa">(GMT-11:00) Samoa</option>
-                                <option data-offset="-36000" value="Hawaii">(GMT-10:00) Hawaii</option>
-                                <option data-offset="-28800" value="Alaska">(GMT-08:00) Alaska</option>
-                                <option data-offset="-25200" value="Pacific Time (US &amp; Canada)">(GMT-07:00) Pacific Time (US &amp; Canada)</option>
-                                <option data-offset="-25200" value="Tijuana">(GMT-07:00) Tijuana</option>
-                                
-                                <option data-offset="7200" value="Copenhagen">(GMT+02:00) Copenhagen</option>
-                                <option data-offset="7200" value="Madrid">(GMT+02:00) Madrid</option>
-                                <option data-offset="7200" value="Paris">(GMT+02:00) Paris</option>
-                                
-                                <option data-offset="46800" value="Nuku'alofa">(GMT+13:00) Nuku'alofa</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!--begin::Form Group-->
-                    <div class="form-group row align-items-center">
-                        <label class="col-xl-3 col-lg-3 col-form-label">Communication</label>
-                        <div class="col-lg-9 col-xl-6">
-                            <div class="checkbox-inline">
-                                <label class="checkbox">
-                                <input type="checkbox" checked="checked" />
-                                <span></span>Email</label>
-                                <label class="checkbox">
-                                <input type="checkbox" checked="checked" />
-                                <span></span>SMS</label>
-                                <label class="checkbox">
-                                <input type="checkbox" />
-                                <span></span>Phone</label>
-                            </div>
-                        </div>
-                    </div>
-                    <!--begin::Form Group-->
-                    <div class="separator separator-dashed my-5"></div>
-                    <!--begin::Form Group-->
-                    <div class="row">
-                        <label class="col-xl-3"></label>
-                        <div class="col-lg-9 col-xl-6">
-                            <h5 class="font-weight-bold mb-6">Security:</h5>
-                        </div>
-                    </div>
-                    <!--begin::Form Group-->
-                    <div class="form-group row">
-                        <label class="col-xl-3 col-lg-3 col-form-label">Login verification</label>
-                        <div class="col-lg-9 col-xl-6">
-                            <button type="button" class="btn btn-light-primary font-weight-bold btn-sm">Setup login verification</button>
-                            <p class="form-text text-muted pt-2">After you log in, you will be asked for additional information to confirm your identity and protect your account from being compromised.
-                            <a href="#" class="font-weight-bold">Learn more</a>.</p>
+                            <a href="{% url 'account:logout' %}"  type="button" class="btn btn-light-danger font-weight-bold btn-sm">Logout</a>
+                            <p class="form-text text-muted pt-2">Login out will cancel all remember me session and ongoing process </p>
                         </div>
                     </div>
                     <!--begin::Form Group-->
@@ -258,9 +173,8 @@
                                 <input type="checkbox" />
                                 <span></span>Require personal information to reset your password.</label>
                             </div>
-                            <p class="form-text text-muted py-2">For extra security, this requires you to confirm your email or phone number when you reset your password.
-                            <a href="#" class="font-weight-boldk">Learn more</a>.</p>
-                            <button type="button" class="btn btn-light-danger font-weight-bold btn-sm">Deactivate your account ?</button>
+                            <p class="form-text text-muted py-2">Are you sure you want to delete your account? This action is irreversible and all your data will be permanently deleted.</p>
+                            <a href="{% url 'account:delete_account' %}" type="button" class="btn btn-light-danger font-weight-bold btn-sm">Delete my account</a>
                         </div>
                     </div>
                 </div>

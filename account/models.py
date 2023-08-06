@@ -87,7 +87,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Profile(models.Model):
     user = models.OneToOneField(User , on_delete=models.CASCADE)
-    phone_number = models.CharField(max_length=20 , null=True , blank=True)
+    phone_number = models.CharField(max_length=20 , null=True , blank=True, default='')
     address = models.CharField(max_length=200 , null=True , blank=True)
     is_disabled = models.BooleanField(default=False)
     role = models.ManyToManyField('account.UserRole', blank=True, null=True) 

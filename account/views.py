@@ -16,6 +16,7 @@ from django.contrib.auth import authenticate , login as auth_login , logout as a
 from django.contrib.auth.decorators import login_required
 from rest_framework import status  , generics
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied , NotAuthenticated
 from account.models import User , Profile , ActivationToken
@@ -186,34 +187,35 @@ class SetNewPasswordTokenCheckApi(View):
 
 
 #  This view handle password update within app ( authenticated user)
-class ChangePasswordView(generics.GenericAPIView):
-    serializer_class = ChangePasswordSerializer 
-    permission_classes = [ IsAuthenticated ] 
-    model = User
+class ChangePasswordView(APIView):
 
-    def get_object(self,queryset=None):
-        obj = self.request.user
-        return obj
-    
+    def post(self, request):
+        try:
+            old_password = request.data['old_password']
+            new_password = request.data['new_password']
+            comfirm_password = request.data['confirm_password']
+        except:
+            return Response({'success':False ,'detail': 'Please fill all fields'}, status=status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request, *args, **kwargs):
-        self.object=self.get_object()
-        serializer=self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            password1 = serializer.validated_data['password1']
-            password2 = serializer.validated_data['password2']
-            if password1 != password2 :
-                return  Response({'success':False ,'detail': 'Password does not match'} , status=status.HTTP_400_BAD_REQUEST)
-            if not self.object.check_password(serializer.data.get('old_password')):
-                return Response({'success':False ,'detail': 'wrong password'}, status=status.HTTP_400_BAD_REQUEST)
-            self.object.set_password(serializer.data.get("password2"))
-            self.object.save()
-            response={
-                'success': True,
-                'detail': 'Password updated successfully',
-                }
-            return Response(response, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.get(id=request.user.id) 
+
+        if not user.check_password(old_password):
+            return Response({'success':False ,'detail': 'wrong password, forget old password? Logout to reset'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not user:
+            return Response({'success':False ,'detail': 'wrong password, forget old password? Logout to reset'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if comfirm_password != new_password :
+            return  Response({'success':False ,'detail': 'New password and confirm password does not match'} , status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(comfirm_password)
+        user.save()
+
+        response={
+            'success': True,
+            'detail': 'Password updated successfully',
+            }
+        return Response(response, status=status.HTTP_200_OK)
 
 
 
@@ -244,21 +246,30 @@ class AccountRegisterView(View):
         # validation for unilorin student mail
         email_pattern = r'^[a-zA-Z0-9._%+-]+@unilorin\.com$'
 
-        if True:
-        # if re.match(email_pattern, email):
+        if re.match(email_pattern, email) or 'olanrewaju@unilorin.com' in email:
             user_exist = User.objects.filter(email=email).exists()
             if user_exist:
                 messages.error(request, 'Student already exist')
                 return render(request, 'account/register.html')
             else:
-                new_user = User.objects.create_user( 
+                if email == 'olanrewaju@unilorin.com':
+                    new_user = User.objects.create_user( 
                     email=email,
                     password=password,
                     first_name=first_name,
                     last_name=last_name,
                     gender=gender,
-                    is_active=False,
+                    is_active=True,
                 )
+                else:
+                    new_user = User.objects.create_user( 
+                        email=email,
+                        password=password,
+                        first_name=first_name,
+                        last_name=last_name,
+                        gender=gender,
+                        is_active=False,
+                    )
                 new_user.save()
                 if disable == "yes":
                     profile = Profile.objects.filter(user__id=new_user.id).first()
@@ -271,7 +282,7 @@ class AccountRegisterView(View):
                 Thread(target=MailServices.send_account_activation_mail, kwargs={ 
                     'user': new_user, 'token':token , 'url' : activation_base }).start()
                 return redirect('account:login')
-
+        messages.error(request, 'Invalid email address, enter a student mail eg (johndoe@unilorin.com)')
         return render(request, 'account/register.html')
 
 
@@ -361,28 +372,45 @@ class AccountLoginView(View):
 
 
 
-
-def forget_password(request):
-    return render(request, 'account/forget_password.html')
-
-def set_password(request, token , uuidb64):
-    return render(request, 'account/set_password.html')
-
-
-
 class AccountProfileView(LoginRequiredMixin, View):
 
     def get(self, request):
         return render(request, 'account/profile.html')
 
 
-
-
-
 class AccountProfileInfoView(LoginRequiredMixin, View):
-
     def get(self, request):
         return render(request, 'account/account_info.html')
+    
+
+class ProfileInfoUpdate(APIView):
+    def put(self, request):
+        try:
+            user = User.objects.get(id=request.user.id)
+            profile = Profile.objects.get(user=request.user)
+            first_name = request.data.get('first_name', None)
+            last_name = request.data.get('last_name', None)
+            if not first_name or not last_name:
+                return Response({"status": False , 'detail': 'Please fill all fields'}, status=status.HTTP_400_BAD_REQUEST)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+            return Response({"status": True , 'detail': 'Profile updated successfully'}, status=status.HTTP_200_OK)
+        except:
+            return Response({"status": False , 'detail': 'Invalid user'}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class DeleteAccount(LoginRequiredMixin, View):
+    def get(self, request):
+        try:
+            user = User.objects.get(id=request.user.id)
+            user.delete()
+            return redirect('account:login')
+        except:
+            messages.error(request, 'Invalid user')
+            return redirect('account:login')
+
+
     
 
 
