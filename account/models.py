@@ -95,6 +95,10 @@ class Profile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+    def __str__(self) -> str:
+        return self.user.email
+
+
 
 class Permission(models.Model):
     name = models.CharField(max_length=50)
@@ -109,6 +113,10 @@ class UserRole(models.Model):
     permission = models.ManyToManyField(Permission)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
+
+
+    def __str__(self) -> str:
+        return self.name
     
 
 
@@ -122,6 +130,10 @@ class ActivationToken(models.Model):
     is_used = models.BooleanField(default=False)
     token_type = models.CharField(max_length=10, choices=TOKEN_TYPES)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self) -> str:
+        return self.token
 
 
 
@@ -154,3 +166,7 @@ class Transaction(models.Model):
 
     def amount_value(self)-> int:
         return int(self.amount * 100)
+    
+
+    def __str__(self) -> str:
+        return self.reference

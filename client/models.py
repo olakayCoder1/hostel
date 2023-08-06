@@ -220,6 +220,11 @@ class Booking(models.Model):
 
 
 
+    def __str__(self) -> str:
+        return f"{self.user.email} : {self.hostel.name} - {self.compound.name}"
+
+
+
 
 
 
