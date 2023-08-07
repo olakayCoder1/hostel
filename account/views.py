@@ -335,6 +335,51 @@ class AccountLogoutView(View):
 
 # http://127.0.0.1:8000/account/login?/account/password-change=/account/password-change
 
+class StaffAccountLoginView(View):
+
+    def post(self, request):
+        staff_id = request.POST.get('staff_id')
+        password = request.POST.get('password')
+
+        if not staff_id or not password:
+            messages.error(request, 'Please fill all fields')
+            return render(request, 'account/staff_login.html') 
+        
+        profile = Profile.objects.filter(staff_id=staff_id).first()
+
+        if not profile:
+            messages.error(request, 'Invalid login credential') 
+            return render(request, 'account/staff_login.html') 
+
+        
+        if is_valid_email(profile.user.email): 
+            user = authenticate(email=profile.user.email , password=password)
+            if user:
+                if user.is_active:
+                    redirect_url = request.GET.get('next', '/') 
+                    auth_login(request, user)
+                    return redirect(redirect_url) 
+                else:
+                    messages.error(request, 'Your account is disabled, kindly contact the administrative')
+                    return render(request, 'account/staff_login.html') 
+
+            else:
+                messages.error(request, 'Invalid login credential') 
+                return render(request, 'account/staff_login.html')   
+
+        else:
+            messages.error(request, 'Invalid email address')
+            return render(request, 'account/staff_login.html') 
+        
+
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('account:profile') 
+        return render(request, 'account/staff_login.html')
+
+
+
 class AccountLoginView(View):
 
     def post(self, request):

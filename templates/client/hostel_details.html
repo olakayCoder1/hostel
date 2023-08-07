@@ -40,9 +40,9 @@
                     {% if compounds %}
                         
                         {% if request.user.profile.is_disabled %}
-                            <button  class="btn btn-sm btn-danger font-weight-bolder text-uppercase">Disable Apply</button>
+                            <button  class="btn btn-sm btn-danger font-weight-bolder text-uppercase">Disable Student Rooms ::: Open</button>
                         {% else %}
-                            <button class="btn btn-sm btn-light-success font-weight-bolder text-uppercase mr-3">Apply </button>
+                            <button class="btn btn-sm btn-light-success font-weight-bolder text-uppercase mr-3">Student Rooms ::: Open </button>
                         {% endif %}
                     {% else %}
                         {% if request.user.profile.is_disabled %}

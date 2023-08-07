@@ -12,6 +12,8 @@ class HostelListMiddleware:
     def __call__(self, request):
         if request.user.is_authenticated:
             if request.path.startswith('/hostels') or request.path == '/': 
+                # if request.user.profile.is_staff:
+                #     return redirect(reverse('student_checkin'))
                 booking = Booking.objects.filter(user=request.user).last()
                 if booking and booking.expiration_date > timezone.now():
                     messages.info(request, 'Your booking has not expired yet. You cannot book another room.') 

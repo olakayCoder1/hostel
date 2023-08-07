@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path , include
 from client.views.clients import DashboardView
+from client.views.staff import StudentCheckIn
 from django.conf.urls.static import static
 from django.conf import settings
 from .views import *
@@ -31,6 +32,7 @@ urlpatterns = [
     path('initiate_payment',InitiatePayment.as_view(), name='initiate_payment'), 
     path('verify_payment', VerifyPayment.as_view(), name='verify_payment'),
     path('validate_code', VerifyPayment.as_view(), name='validate_code'),
+    path('student/checkin', StudentCheckIn.as_view(), name='student_checkin'),
 ]
 
 

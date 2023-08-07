@@ -6,9 +6,11 @@
 		{% block title %}
 		<title>Home </title>
 		{% endblock %}
-		<meta name="description" content="Page with empty content" />
+		<meta name="description" content="Our school hostel is more than just a place to stay; it's a community where students can thrive. 
+			Safety is our top priority, and we maintain a secure and controlled environment with 24/7 security personnel and surveillance. 
+			Our dedicated hostel staff ensures that students feel supported, cared for, and valued throughout their stay." />
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-		<link rel="canonical" href="https://keenthemes.com/metronic" />
+		<link rel="canonical" href="https://github.com/olakayCoder1" />
 		<!--begin::Fonts-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
 		<!--end::Fonts-->
@@ -22,7 +24,7 @@
 		<!--end::Global Theme Styles-->
 		<!--begin::Layout Themes(used by all pages)-->
 		<!--end::Layout Themes-->
-		<link rel="shortcut icon" href="{% static 'assets/media/logos/favicon.ico' %}" />
+		<link rel="shortcut icon" href="https://images.crunchbase.com/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/nwban1lvw5knxdvt1k5i" />
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
@@ -32,7 +34,7 @@
 		<div id="kt_header_mobile" class="header-mobile bg-primary header-mobile-fixed">
 			<!--begin::Logo-->
 			<a href="index.html">
-				<img alt="Logo" src="{% static 'assets/media/logos/logo-letter-9.png' %}" class="max-h-30px" />
+				<img alt="Logo" src="https://images.crunchbase.com/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/nwban1lvw5knxdvt1k5i" class="max-h-100px" />
 			</a>
 			<!--end::Logo-->
 			<!--begin::Toolbar-->
@@ -71,8 +73,8 @@
 								<!--begin::Left-->
 								<div class="d-none d-lg-flex align-items-center mr-3">
 									<!--begin::Logo-->
-									<a href="index.html" class="mr-20">
-										<img alt="Logo" src="{% static 'assets/media/logos/logo-letter-9.png' %}" class="max-h-35px" />
+									<a href="/" class="mr-20">
+										<img alt="Logo" src="https://images.crunchbase.com/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/nwban1lvw5knxdvt1k5i" class="max-h-100px" />
 									</a>
 									<!--end::Logo-->
 									<!--begin::Desktop Search-->
@@ -90,14 +92,16 @@
 											<div class="d-flex flex-column text-right pr-3">
 												<span class="text-white opacity-50 font-weight-bold font-size-sm d-none d-md-inline">{{ request.user.email }}</span>
 												{% if user.is_staff %}
-												<span class="text-white font-weight-bolder font-size-sm d-none d-md-inline">Admin</span>
+													<span class="text-white font-weight-bolder font-size-sm d-none d-md-inline">Admin</span>
+												{% elif user.profile.is_staff %}
+													<span class="text-white font-weight-bolder font-size-sm d-none d-md-inline">Staff</span>
 												{% else %}
-												<span class="text-white font-weight-bolder font-size-sm d-none d-md-inline">Student</span>
+													<span class="text-white font-weight-bolder font-size-sm d-none d-md-inline">Student</span>
 												{% endif %}
 
 											</div>
 											<span class="symbol symbol-35">
-												<span class="symbol-label font-size-h5 font-weight-bold text-white bg-white-o-30">O</span>
+												<span class="symbol-label font-size-h5 font-weight-bold text-white bg-white-o-30">{{ user.first_name.0 }}</span>
 											</span>
 										</div>
 									</div>
@@ -218,7 +222,7 @@
 				<!--begin::Header-->
 				<div class="d-flex align-items-center mt-5">
 					<div class="symbol symbol-100 mr-5">
-						<div class="symbol-label" style="background-image:url('{% static 'assets/media/users/300_21.jpg' %}')"></div>
+						<div class="symbol-label" style="background-image:url()"></div>
 						<i class="symbol-badge bg-success"></i>
 					</div>
 					<div class="d-flex flex-column">
@@ -287,32 +291,7 @@
 				<div class="separator separator-dashed my-7"></div>
 				<!--end::Separator-->
 				<!--begin::Notifications-->
-				<div>
-					<!--begin:Heading-->
-					<h5 class="mb-5">Recent Notifications</h5>
-					<!--begin::Item-->
-					<div class="d-flex align-items-center bg-light-warning rounded p-5 gutter-b">
-						<span class="svg-icon svg-icon-warning mr-5">
-							<span class="svg-icon svg-icon-lg">
-								<!--begin::Svg Icon | path:{% static 'assets/media/svg/icons/Home/Library.svg-->
-								<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-									<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-										<rect x="0" y="0" width="24" height="24" />
-										<path d="M5,3 L6,3 C6.55228475,3 7,3.44771525 7,4 L7,20 C7,20.5522847 6.55228475,21 6,21 L5,21 C4.44771525,21 4,20.5522847 4,20 L4,4 C4,3.44771525 4.44771525,3 5,3 Z M10,3 L11,3 C11.5522847,3 12,3.44771525 12,4 L12,20 C12,20.5522847 11.5522847,21 11,21 L10,21 C9.44771525,21 9,20.5522847 9,20 L9,4 C9,3.44771525 9.44771525,3 10,3 Z" fill="#000000" />
-										<rect fill="#000000" opacity="0.3" transform="translate(17.825568, 11.945519) rotate(-19.000000) translate(-17.825568, -11.945519)" x="16.3255682" y="2.94551858" width="3" height="18" rx="1" />
-									</g>
-								</svg>
-								<!--end::Svg Icon-->
-							</span>
-						</span>
-						<div class="d-flex flex-column flex-grow-1 mr-2">
-							<a href="#" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">Another purpose persuade</a>
-							<span class="text-muted font-size-sm">Due in 2 Days</span>
-						</div>
-						<span class="font-weight-bolder text-warning py-1 font-size-lg">+28%</span>
-					</div>
-					<!--end::Item-->
-				</div>
+				
 				<!--end::Notifications-->
 			</div>
 			<!--end::Content-->

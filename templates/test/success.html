@@ -22,11 +22,13 @@
             <div class="row justify-content-center bgi-size-cover bgi-no-repeat py-8 px-8 py-md-27 px-md-0" style="background-image: url({% static 'assets/media/bg/bg-6.jpg' %});">
                 <div class="col-md-9">
                     <div class="d-flex justify-content-between pb-10 pb-md-20 flex-column flex-md-row">
-                        <h1 class="display-4 text-white font-weight-boldest mb-10">H21/C4/R4</h1>
+                        <h1 class="display-4 text-white font-weight-boldest mb-10">{{ myspace.access_code}}</h1>
                         <div class="d-flex flex-column align-items-md-end px-0">
                             <!--begin::Logo-->
                             <span  class="mb-5">
-                                <img src="{{ myspace.qr_code.url }}" alt="" />
+                                {% if myspace.qr_code %}
+                                    <img src="{{ myspace.qr_code.url }}" alt="" />
+                                {% endif %}
                                 {% comment %} <img src="{% static 'assets/media/logos/logo-light.png' %}" alt="" /> {% endcomment %}
                             </span>
                             <!--end::Logo-->
@@ -108,7 +110,7 @@
                         </div>
                         <div class="d-flex flex-column text-md-right">
                             <span class="font-size-lg font-weight-bolder mb-1">TOTAL AMOUNT</span>
-                            <span class="font-size-h2 font-weight-boldest text-danger mb-1">$ {{ myspace.transaction.amount }}</span>
+                            <span class="font-size-h2 font-weight-boldest text-danger mb-1">&#8358; {{ myspace.transaction.amount }}</span>
                             {% comment %} <span>Taxes Included</span> {% endcomment %}
                         </div>
                     </div>

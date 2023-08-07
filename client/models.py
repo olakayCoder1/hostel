@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
-
+import secrets
+import string
 
 
 class Hostel(models.Model):
@@ -217,6 +217,7 @@ class Booking(models.Model):
     expiration_date = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    access_code = models.CharField(null=True, max_length=10)
 
 
 
@@ -225,6 +226,16 @@ class Booking(models.Model):
 
 
 
+    @classmethod
+    def generate_access(cls):
+        characters = string.ascii_letters + string.digits 
+        length = 10
+        access = ''.join(secrets.choice(characters) for _ in range(length))
+        ref_exist = cls.objects.filter(access_code=access).exists()
+        if not ref_exist:
+            return access
+        else:
+            cls.generate_access()
 
 
 

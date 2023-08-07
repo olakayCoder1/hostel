@@ -91,6 +91,8 @@ class Profile(models.Model):
     address = models.CharField(max_length=200 , null=True , blank=True)
     is_disabled = models.BooleanField(default=False)
     role = models.ManyToManyField('account.UserRole', blank=True, null=True) 
+    is_staff = models.BooleanField(default=False)
+    staff_id = models.CharField(max_length=10, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

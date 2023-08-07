@@ -82,6 +82,10 @@
             </div> {% endcomment %}
             <!--end::Form group-->
             <!--begin::Form group-->
+            <div class="d-flex justify-content-between mt-n5">
+                <label class="font-size-h6 font-weight-bolder text-dark pt-5">Alreadu have an account</label>
+                <a href="{% url 'account:login' %}"class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5" >Signin</a>
+            </div>
             <div class="form-group d-flex flex-wrap pb-lg-0 pb-3">
                 <button type="submit" id="kt_login_signup_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4">Submit</button>
                 {% comment %} <button type="cancel" id="kt_login_signup_cancel" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3">Clear Fields</button> {% endcomment %}

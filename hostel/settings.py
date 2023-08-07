@@ -14,7 +14,7 @@ from pathlib import Path
 import environ
 import os
 from datetime import timedelta
-
+import cloudinary_storage
 
 env = env = environ.Env()
 
@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     # Third party apps
     'rest_framework',
     'corsheaders',
+    'cloudinary',
+    'cloudinary_storage',
 
     # Local apps
     'client',
@@ -227,3 +229,4 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS' : 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE' : 4
 }
+

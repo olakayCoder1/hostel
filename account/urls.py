@@ -11,6 +11,7 @@ urlpatterns = [
     path('info', views.AccountProfileInfoView.as_view() , name='profile_info'), 
     path('register', views.AccountRegisterView.as_view() , name='register'), 
     path('login', views.AccountLoginView.as_view(), name='login'), 
+    path('login/staff', views.StaffAccountLoginView.as_view(), name='staff_login'), 
     path('logout', views.AccountLogoutView.as_view(), name='logout'), 
     path('activate', views.AccountActivationView.as_view(), name='activation'), 
     path('password-forget', views.ResetPasswordRequestEmailApiView.as_view(), name='forget_password'), 

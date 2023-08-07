@@ -5,11 +5,7 @@ from rest_framework.response import Response
 from account.models import User ,Transaction
 from client.models import Booking, Compound
 from django.conf import settings
-from django.core.files.base import ContentFile
 import requests
-import qrcode
-import uuid
-import io
 from django.contrib.auth.mixins import LoginRequiredMixin
 from account.models import User
 from helpers.main import Injector
@@ -48,21 +44,23 @@ class VerifyPayment(APIView):
                 # Generate QR code
                 data = f"user_id:{request.user.id}"  # Modify this data as needed for your QR code
                 transaction_bookiing = Booking.objects.filter(transaction=transaction).first()
-                qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L,
-                            box_size=10, border=4,
-                    )
-                qr.add_data(data)
-                qr.make(fit=True)
-                qr_image = qr.make_image(fill_color="black", back_color="white")
-                # Convert PilImage to bytes
-                qr_image_bytes = io.BytesIO()
-                qr_image.save(qr_image_bytes, format="PNG")
+                # qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L,
+                #             box_size=10, border=4,
+                #     )
+                # qr.add_data(data)
+                # qr.make(fit=True)
+                # qr_image = qr.make_image(fill_color="black", back_color="white")
+                # # Convert PilImage to bytes
+                # qr_image_bytes = io.BytesIO()
+                # qr_image.save(qr_image_bytes, format="PNG")
                 if transaction_bookiing:
-                    if not transaction_bookiing.qr_code:
-                        transaction_bookiing.qr_code.save(f'{uuid.uuid4().hex}.png', ContentFile(qr_image_bytes.getvalue()), save=True)
-                        transaction_bookiing.save()
+                    # if not transaction_bookiing.qr_code:
+                    #     transaction_bookiing.qr_code.save(f'{uuid.uuid4().hex}.png', ContentFile(qr_image_bytes.getvalue()), save=True)
+                    #     transaction_bookiing.save()
+                    pass
 
                 else:
+                    booking_access = Booking.generate_access()
                     # create booking
                     booking = Booking(
                         user=user,
@@ -71,11 +69,14 @@ class VerifyPayment(APIView):
                         transaction=transaction,
                         status='approved',
                         payment_status='paid',
-                        expiration_date=transaction.created_at + timezone.timedelta(days=30)
+                        expiration_date=transaction.created_at + timezone.timedelta(days=30),
+                        access_code=booking_access
                     )
                     booking.save()
-                    booking.qr_code.save(f'{uuid.uuid4().hex}.png', ContentFile(qr_image_bytes.getvalue()), save=True)
-                    booking.save()
+                    
+                    # booking.qr_code.save(f'{uuid.uuid4().hex}.png', ContentFile(qr_image_bytes.getvalue()), save=True)
+                    # booking.qr_code.save(f'{uuid.uuid4().hex}.png', ContentFile(qr_image_bytes.getvalue()), save=True)
+                    # booking.save()
                 # Payment was successful, update your database or perform any other actions
                 return Response({
                     'status':True, 'detail':'Payment successful. Thank you!'}, status=status.HTTP_200_OK)

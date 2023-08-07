@@ -1,0 +1,132 @@
+
+{% extends "base.html" %}
+
+{% load static %}
+{% block title %}
+   <title>Student Check In</title>
+{% endblock %}
+
+{% block subheader  %}
+    {% comment %} {% include 'in_page_title.html' with page=page_name %} {% endcomment %}
+{% endblock %}
+
+{% block page_content %}
+
+<div class="d-flex flex-column-fluid flex-center">
+        <!--begin::Signin-->
+    <div class="login-form login-signin">
+        <!--begin::Form-->
+        <form class="form"   id="myForm" >
+        {% csrf_token %}
+            <!--begin::Title-->
+            <div class="pb-13 pt-lg-0 pt-5">
+                <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Enter student access code to verify</h3>
+                {% comment %} <span class="text-muted font-weight-bold font-size-h4">Enter student code to verify</span> {% endcomment %}
+            </div>
+            <!--begin::Title-->
+            <!--begin::Form group-->
+            <div id='alertMessage'></div>
+            <div class="form-group">
+                <label class="font-size-h6 font-weight-bolder text-dark">Access Code</label>
+                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="text" name="access_code" autocomplete="off" required />
+            </div>
+            <!--end::Form group-->
+            <!--begin::Action-->
+            <div class="pb-lg-0 pb-5">
+                <button type="submit" id="kt_login_signin_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Verify</button>
+                
+            </div>
+            <!--end::Action-->
+        </form>
+        <!--end::Form-->
+    </div>
+</div>
+
+<script>
+{% comment %} alert('Hello world') {% endcomment %}
+
+    const myForm = document.getElementById('myForm');
+    // Add the event listener
+    myForm.addEventListener('submit', function(event) {
+        // Prevent the form from submitting immediately
+        event.preventDefault();
+
+        // Your custom logic here
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        // For example, you can validate form data
+        const access_code = myForm.querySelector('input[name="access_code"]').value;
+
+        const inputFields = myForm.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="checkbox"]');
+
+
+        const url = "{% url 'student_checkin' %}"
+        const data = {
+            'access_code': access_code,
+        }
+
+        const response = fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(updatedUser => {
+        
+            const fetchMessageElement = document.getElementById('fetchMessage');
+
+            if (fetchMessageElement) {
+                fetchMessageElement.innerHTML = updatedUser.detail;
+            }
+            const olaayElement = document.getElementById('alertMessage');
+            if (olaayElement) {
+                olaayElement.innerHTML = `
+                    <div  class="alert alert-custom ${updatedUser.status ? "alert-success ": "alert-danger"} fade show mb-10" role="alert">
+                        <div class="alert-icon">
+                            <span class="svg-icon svg-icon-3x svg-icon-light">
+                                <!--begin::Svg Icon | path:assets/media/svg/icons/Code/Info-circle.svg-->
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24" />
+                                        <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
+                                        <rect fill="#000000" x="11" y="10" width="2" height="7" rx="1" />
+                                        <rect fill="#000000" x="11" y="7" width="2" height="2" rx="1" />
+                                    </g>
+                                </svg>
+                                <!--end::Svg Icon-->
+                            </span>
+                        </div>
+                        <div class="alert-text font-weight-bold" id="fetchMessage">
+                            ${updatedUser.detail}
+                        </div>
+                        <div class="alert-close">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">
+                                    <i class="ki ki-close"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>`;
+            }
+
+            {% comment %} if( updatedUser.status ){
+                setTimeout(function() {
+                    window.location.reload();
+                    }, 1500);
+            }  {% endcomment %}
+            
+        })
+        .catch(error => {
+            console.error('Error updating user:', error);
+        });
+    
+
+        // If validation passes, you can submit the form programmatically
+        //myForm.submit();
+    });
+
+
+</script>
+{% endblock %}
