@@ -241,13 +241,7 @@ class AccountRegisterView(View):
             messages.error(request, 'Student already exist')
             return render(request, 'account/register.html')
         else:
-            if email == 'olanrewaju@unilorin.com':
-                new_user = User.objects.create_user( 
-                email=email, password=password, first_name=first_name,
-                last_name=last_name, gender=gender, is_active=True,
-            )
-            else:
-                new_user = User.objects.create_user( 
+            new_user = User.objects.create_user( 
                     email=email,password=password, first_name=first_name,
                     last_name=last_name, gender=gender, is_active=True,
                 )
