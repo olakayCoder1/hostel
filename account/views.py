@@ -235,40 +235,24 @@ class AccountRegisterView(View):
             messages.error(request, 'Password does not match')
             return render(request, 'account/register.html')
 
-        # validation for unilorin student mail
-        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
-        if re.match(email_pattern, email) or 'olanrewaju@unilorin.com' in email:
-            user_exist = User.objects.filter(email=email).exists()
-            if user_exist:
-                messages.error(request, 'Student already exist')
-                return render(request, 'account/register.html')
-            else:
-                if email == 'olanrewaju@unilorin.com':
-                    new_user = User.objects.create_user( 
-                    email=email, password=password, first_name=first_name,
+        user_exist = User.objects.filter(email=email).exists()
+        if user_exist:
+            messages.error(request, 'Student already exist')
+            return render(request, 'account/register.html')
+        else:
+            new_user = User.objects.create_user( 
+                    email=email,password=password, first_name=first_name,
                     last_name=last_name, gender=gender, is_active=True,
                 )
-                else:
-                    new_user = User.objects.create_user( 
-                        email=email,password=password, first_name=first_name,
-                        last_name=last_name, gender=gender, is_active=False,
-                    )
-                new_user.save()
-                if disable == "yes":
-                    profile = Profile.objects.filter(user__id=new_user.id).first()
-                    profile.is_disabled
-                    profile.save()
-                token = uuid4().hex
-                activation_base = request.build_absolute_uri(reverse('account:activation'))
-                acivation_token = ActivationToken.objects.create(user=new_user, token_type='account', token=token)
-                messages.success(request, 'Account activation link has been sent to your mail')
-                Thread(target=MailServices.send_account_activation_mail, kwargs={ 
-                    'user': new_user, 'token':token , 'url' : activation_base }).start()
-                return redirect('account:login')
-        messages.error(request, 'Invalid email address, enter a student mail eg (johndoe@unilorin.com)')
-        return render(request, 'account/register.html')
-
+            new_user.save()
+            if disable == "yes":
+                profile = Profile.objects.filter(user__id=new_user.id).first()
+                profile.is_disabled == True
+                profile.save()
+            messages.success(request, 'Account Regsiter successfully')
+            return redirect('account:login')
+        
 
 
 
