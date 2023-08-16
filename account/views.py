@@ -257,14 +257,9 @@ class AccountRegisterView(View):
             new_user.save()
             if disable == "yes":
                 profile = Profile.objects.filter(user__id=new_user.id).first()
-                profile.is_disabled
+                profile.is_disabled == True
                 profile.save()
-            token = uuid4().hex
-            # activation_base = request.build_absolute_uri(reverse('account:activation'))
-            # acivation_token = ActivationToken.objects.create(user=new_user, token_type='account', token=token)
             messages.success(request, 'Account Regsiter successfully')
-            # Thread(target=MailServices.send_account_activation_mail, kwargs={ 
-            #     'user': new_user, 'token':token , 'url' : activation_base }).start()
             return redirect('account:login')
         
         messages.error(request, 'Invalid email address, enter a student mail eg (johndoe@unilorin.com)')
