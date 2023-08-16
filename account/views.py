@@ -235,10 +235,7 @@ class AccountRegisterView(View):
             messages.error(request, 'Password does not match')
             return render(request, 'account/register.html')
 
-        # validation for unilorin student mail
-        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
-        # if re.match(email_pattern, email) or 'olanrewaju@unilorin.com' in email:
         user_exist = User.objects.filter(email=email).exists()
         if user_exist:
             messages.error(request, 'Student already exist')
@@ -262,9 +259,6 @@ class AccountRegisterView(View):
             messages.success(request, 'Account Regsiter successfully')
             return redirect('account:login')
         
-        messages.error(request, 'Invalid email address, enter a student mail eg (johndoe@unilorin.com)')
-        return render(request, 'account/register.html')
-
 
 
 
