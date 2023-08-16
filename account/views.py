@@ -1,5 +1,3 @@
-from datetime import datetime
-import time
 from threading import Thread
 from uuid import uuid4
 import re
@@ -13,19 +11,13 @@ from django.utils.encoding import DjangoUnicodeDecodeError, smart_str
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator 
 from django.contrib.auth import authenticate , login as auth_login , logout as auth_logout
-from django.contrib.auth.decorators import login_required
 from rest_framework import status  , generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import PermissionDenied , NotAuthenticated
+from rest_framework.exceptions import PermissionDenied 
 from account.models import User , Profile , ActivationToken
-from account.forms import AccountRegisterForm 
 from .serializers import ( 
     SignupSerializer,  LoginSerializer,
-    ResetPasswordRequestEmailSerializer, 
-    SetNewPasswordSerializer, 
-    ChangePasswordSerializer  
 )
 from helpers.libs.tokens import create_jwt_pair_for_user
 from helpers.libs.mails import MailServices
@@ -244,7 +236,7 @@ class AccountRegisterView(View):
             return render(request, 'account/register.html')
 
         # validation for unilorin student mail
-        email_pattern = r'^[a-zA-Z0-9._%+-]+@unilorin\.com$'
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
         if re.match(email_pattern, email) or 'olanrewaju@unilorin.com' in email:
             user_exist = User.objects.filter(email=email).exists()
@@ -254,21 +246,13 @@ class AccountRegisterView(View):
             else:
                 if email == 'olanrewaju@unilorin.com':
                     new_user = User.objects.create_user( 
-                    email=email,
-                    password=password,
-                    first_name=first_name,
-                    last_name=last_name,
-                    gender=gender,
-                    is_active=True,
+                    email=email, password=password, first_name=first_name,
+                    last_name=last_name, gender=gender, is_active=True,
                 )
                 else:
                     new_user = User.objects.create_user( 
-                        email=email,
-                        password=password,
-                        first_name=first_name,
-                        last_name=last_name,
-                        gender=gender,
-                        is_active=False,
+                        email=email,password=password, first_name=first_name,
+                        last_name=last_name, gender=gender, is_active=False,
                     )
                 new_user.save()
                 if disable == "yes":
