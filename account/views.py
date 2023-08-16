@@ -252,7 +252,7 @@ class AccountRegisterView(View):
             else:
                 new_user = User.objects.create_user( 
                     email=email,password=password, first_name=first_name,
-                    last_name=last_name, gender=gender, is_active=False,
+                    last_name=last_name, gender=gender, is_active=True,
                 )
             new_user.save()
             if disable == "yes":
@@ -260,12 +260,13 @@ class AccountRegisterView(View):
                 profile.is_disabled
                 profile.save()
             token = uuid4().hex
-            activation_base = request.build_absolute_uri(reverse('account:activation'))
-            acivation_token = ActivationToken.objects.create(user=new_user, token_type='account', token=token)
-            messages.success(request, 'Account activation link has been sent to your mail')
-            Thread(target=MailServices.send_account_activation_mail, kwargs={ 
-                'user': new_user, 'token':token , 'url' : activation_base }).start()
+            # activation_base = request.build_absolute_uri(reverse('account:activation'))
+            # acivation_token = ActivationToken.objects.create(user=new_user, token_type='account', token=token)
+            messages.success(request, 'Account Regsiter successfully')
+            # Thread(target=MailServices.send_account_activation_mail, kwargs={ 
+            #     'user': new_user, 'token':token , 'url' : activation_base }).start()
             return redirect('account:login')
+        
         messages.error(request, 'Invalid email address, enter a student mail eg (johndoe@unilorin.com)')
         return render(request, 'account/register.html')
 
